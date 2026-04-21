@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import './App.css'
 import { attractions } from './data/attractions/attractions'
 import { tripMeta } from './data/meta/tripMeta'
@@ -8,16 +8,85 @@ import { RoutesPanel } from './modules/RoutesPanel'
 import { SchedulePanel } from './modules/SchedulePanel'
 import type { ModuleKey } from './types'
 
+const SELECTED_ATTRACTIONS_STORAGE_KEY = 'guiyang:selected-attraction-ids'
+const ACTIVE_ATTRACTION_STORAGE_KEY = 'guiyang:active-attraction-id'
+
+function getStoredSelectedAttractionIds() {
+  if (typeof window === 'undefined') {
+    return []
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(SELECTED_ATTRACTIONS_STORAGE_KEY)
+
+    if (!rawValue) {
+      return []
+    }
+
+    const parsedValue = JSON.parse(rawValue)
+
+    if (!Array.isArray(parsedValue)) {
+      return []
+    }
+
+    const validAttractionIds = new Set(attractions.map((attraction) => attraction.id))
+
+    return parsedValue.filter(
+      (attractionId): attractionId is string =>
+        typeof attractionId === 'string' && validAttractionIds.has(attractionId),
+    )
+  } catch {
+    return []
+  }
+}
+
+function getStoredActiveAttractionId() {
+  if (typeof window === 'undefined') {
+    return attractions[0]?.id ?? null
+  }
+
+  try {
+    const rawValue = window.localStorage.getItem(ACTIVE_ATTRACTION_STORAGE_KEY)
+    const validAttractionIds = new Set(attractions.map((attraction) => attraction.id))
+
+    if (rawValue && validAttractionIds.has(rawValue)) {
+      return rawValue
+    }
+
+    return attractions[0]?.id ?? null
+  } catch {
+    return attractions[0]?.id ?? null
+  }
+}
+
 function App() {
   const [activeModule, setActiveModule] = useState<ModuleKey>('attractions')
-  const [selectedAttractionIds, setSelectedAttractionIds] = useState<string[]>([])
+  const [selectedAttractionIds, setSelectedAttractionIds] = useState<string[]>(
+    getStoredSelectedAttractionIds,
+  )
   const [activeAttractionId, setActiveAttractionId] = useState<string | null>(
-    attractions[0]?.id ?? null,
+    getStoredActiveAttractionId,
   )
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
   const [activeRouteId, setActiveRouteId] = useState<string | null>(
     routePlans[0]?.id ?? null,
   )
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      SELECTED_ATTRACTIONS_STORAGE_KEY,
+      JSON.stringify(selectedAttractionIds),
+    )
+  }, [selectedAttractionIds])
+
+  useEffect(() => {
+    if (!activeAttractionId) {
+      window.localStorage.removeItem(ACTIVE_ATTRACTION_STORAGE_KEY)
+      return
+    }
+
+    window.localStorage.setItem(ACTIVE_ATTRACTION_STORAGE_KEY, activeAttractionId)
+  }, [activeAttractionId])
 
   const selectedAttractionNames = attractions
     .filter((attraction) => selectedAttractionIds.includes(attraction.id))
