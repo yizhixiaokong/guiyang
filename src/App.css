@@ -997,6 +997,7 @@
   overflow: hidden;
   aspect-ratio: 1.15;
   border: 1px solid rgb(124 91 63 / 0.14);
+  border-radius: calc(var(--radius-card) - 0.35rem);
   background: rgb(255 249 242 / 0.92);
   cursor: pointer;
   opacity: 0.78;
@@ -1038,6 +1039,7 @@
 .attraction-best-for {
   padding: 0.85rem 0.95rem;
   border: 1px solid var(--line);
+  border-radius: calc(var(--radius-card) - 0.15rem);
   background: rgb(255 248 241 / 0.82);
 }
 
@@ -1078,6 +1080,7 @@
 .empty-state {
   padding: 1.2rem;
   border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-card);
   background: rgb(255 250 244 / 0.8);
 }
 
@@ -1111,6 +1114,7 @@
 .route-summary-grid div {
   padding: 0.8rem;
   border: 1px solid var(--line);
+  border-radius: calc(var(--radius-card) - 0.25rem);
   background: rgb(255 252 247 / 0.74);
 }
 
@@ -1125,6 +1129,7 @@
 .tag-list li {
   padding: 0.35rem 0.7rem;
   border: 1px solid var(--line);
+  border-radius: 999px;
   background: rgb(255 248 239 / 0.86);
 }
 
