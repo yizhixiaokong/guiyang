@@ -15,6 +15,9 @@ export function AttractionsPanel({
   onCopySelected,
   copyState,
 }: AttractionsPanelProps) {
+  const mustVisitCount = attractions.filter((attraction) => attraction.priority === '必去').length
+  const freeCount = attractions.filter((attraction) => attraction.ticket.includes('免费')).length
+
   return (
     <section className="module-shell">
       <header className="module-header">
@@ -34,14 +37,14 @@ export function AttractionsPanel({
           <p>后续会由你补入贵阳景点的详细信息。</p>
         </article>
         <article className="metric-card">
-          <span className="mini-label">已勾选地点</span>
-          <strong className="metric-value">{selectedAttractionIds.length}</strong>
-          <p>复制后直接给其他 AI 做线路规划。</p>
+          <span className="mini-label">必去景点</span>
+          <strong className="metric-value">{mustVisitCount}</strong>
+          <p>这批点更适合优先进入五一主线路。</p>
         </article>
         <article className="metric-card">
-          <span className="mini-label">地图表达</span>
-          <strong className="metric-value">Pins</strong>
-          <p>当前为静态示意地图承载位，不接真实地图 SDK。</p>
+          <span className="mini-label">免费优先</span>
+          <strong className="metric-value">{freeCount}</strong>
+          <p>如果需要控制预算，可以优先围绕免费景点排路线。</p>
         </article>
       </div>
 
@@ -49,22 +52,27 @@ export function AttractionsPanel({
         <div className="map-placeholder" aria-label="景点地图占位">
           <div className="placeholder-grid" />
           <div className="placeholder-pins" aria-hidden="true">
-            <div className="placeholder-pin" style={{ left: '16%', top: '20%' }}>
-              待放置图钉
-            </div>
-            <div className="placeholder-pin" style={{ left: '58%', top: '28%' }}>
-              贵阳景点
-            </div>
-            <div className="placeholder-pin" style={{ left: '34%', top: '66%' }}>
-              推荐标签
-            </div>
+            {attractions.map((attraction, index) => (
+              <div
+                key={attraction.id}
+                className="placeholder-pin"
+                style={{ left: attraction.mapPosition.left, top: attraction.mapPosition.top }}
+              >
+                {String(index + 1).padStart(2, '0')} {attraction.name}
+              </div>
+            ))}
           </div>
           <div className="map-caption">
             <p className="mini-label">Static Map Placeholder</p>
-            <h3>景点图钉示意区</h3>
+            <h3>景点分布与优先级示意</h3>
             <p>
-              后续每个景点都可以在这里用图钉、编号或风格化标签呈现，形成旅行海报式的地点导览版面。
+              当前先用海报式点位标签表达“城市段”和“花溪段”的景点分布，后续路线模块会基于这些名称继续组织线路。
             </p>
+            <div className="map-legend">
+              <span>城区聚合：黔灵山、甲秀楼、文昌阁、青云市集、民生路</span>
+              <span>花溪方向：青岩古镇、夜郎谷</span>
+              <span>文化补充：贵州省博物馆</span>
+            </div>
           </div>
         </div>
 
@@ -106,7 +114,12 @@ export function AttractionsPanel({
                     />
                     <span className="checklist-meta">
                       <strong>{attraction.name}</strong>
-                      <span>{attraction.district}</span>
+                      <span>
+                        {attraction.district} · {attraction.category}
+                      </span>
+                      <span>
+                        {attraction.recommendedDuration} · {attraction.ticket}
+                      </span>
                       <span>{attraction.recommendation}</span>
                     </span>
                   </label>
@@ -131,13 +144,49 @@ export function AttractionsPanel({
             <article key={attraction.id} className="attraction-card">
               <div className="checklist-header">
                 <div>
-                  <p className="mini-label">{attraction.district}</p>
+                  <p className="mini-label">
+                    {attraction.district} · {attraction.category}
+                  </p>
                   <h3>{attraction.name}</h3>
                 </div>
-                <span className="status-pill">{attraction.status}</span>
+                <span className="status-pill">{attraction.priority}</span>
               </div>
               <p>{attraction.summary}</p>
               <p>{attraction.recommendation}</p>
+              <div className="attraction-detail-grid">
+                <div>
+                  <span className="mini-label">地址</span>
+                  <strong>{attraction.address}</strong>
+                </div>
+                <div>
+                  <span className="mini-label">门票</span>
+                  <strong>{attraction.ticket}</strong>
+                </div>
+                <div>
+                  <span className="mini-label">开放时间</span>
+                  <strong>{attraction.openingHours}</strong>
+                </div>
+                <div>
+                  <span className="mini-label">建议时长</span>
+                  <strong>{attraction.recommendedDuration}</strong>
+                </div>
+              </div>
+              <div className="attraction-background">
+                <p className="mini-label">背景</p>
+                <p>{attraction.background}</p>
+              </div>
+              <div className="attraction-highlights">
+                <p className="mini-label">亮点</p>
+                <ul className="highlight-list">
+                  {attraction.highlights.map((highlight) => (
+                    <li key={highlight}>{highlight}</li>
+                  ))}
+                </ul>
+              </div>
+              <p className="attraction-best-for">
+                <span className="mini-label">更适合</span>
+                <strong>{attraction.bestFor}</strong>
+              </p>
               <ul className="tag-list">
                 {attraction.tags.map((tag) => (
                   <li key={tag}>{tag}</li>

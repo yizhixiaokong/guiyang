@@ -4,8 +4,21 @@ export interface Attraction {
   id: string
   name: string
   district: string
+  category: string
+  address: string
+  background: string
   summary: string
   recommendation: string
+  highlights: string[]
+  ticket: string
+  openingHours: string
+  recommendedDuration: string
+  priority: '必去' | '推荐'
+  bestFor: string
+  mapPosition: {
+    left: string
+    top: string
+  }
   tags: string[]
   status: 'empty' | 'draft' | 'ready'
 }

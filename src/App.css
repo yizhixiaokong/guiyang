@@ -303,6 +303,14 @@
   backdrop-filter: blur(10px);
 }
 
+.map-legend {
+  display: grid;
+  gap: 0.35rem;
+  margin-top: 0.85rem;
+  font-size: 0.9rem;
+  color: var(--ink-soft);
+}
+
 .route-map-caption {
   background: rgb(15 37 35 / 0.72);
 }
@@ -423,6 +431,55 @@
 .route-stop-list {
   display: grid;
   gap: 0.3rem;
+}
+
+.attraction-detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+}
+
+.attraction-detail-grid div,
+.attraction-background,
+.attraction-highlights,
+.attraction-best-for {
+  padding: 0.85rem 0.95rem;
+  border: 1px solid var(--line);
+  background: rgb(255 248 241 / 0.82);
+}
+
+.attraction-detail-grid div {
+  display: grid;
+  gap: 0.3rem;
+}
+
+.highlight-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 0.45rem;
+}
+
+.highlight-list li {
+  position: relative;
+  padding-left: 1rem;
+}
+
+.highlight-list li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.55rem;
+  width: 0.45rem;
+  height: 0.45rem;
+  border-radius: 50%;
+  background: var(--accent-strong);
+}
+
+.attraction-best-for {
+  display: grid;
+  gap: 0.35rem;
 }
 
 .empty-state {
@@ -559,6 +616,7 @@
 
   .hero-meta-grid,
   .metric-strip,
+  .attraction-detail-grid,
   .route-summary-grid,
   .module-switcher {
     grid-template-columns: 1fr;
