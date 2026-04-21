@@ -1,5 +1,6 @@
 import type { Attraction } from '../types'
 import { AttractionsAmap } from './AttractionsAmap'
+import { AttractionGallery } from './AttractionGallery'
 
 interface AttractionsPanelProps {
   attractions: Attraction[]
@@ -135,6 +136,7 @@ export function AttractionsPanel({
         ) : (
           attractions.map((attraction) => (
             <article key={attraction.id} className="attraction-card">
+              <AttractionGallery images={attraction.images} title={attraction.name} />
               <div className="checklist-header">
                 <div>
                   <p className="mini-label">

@@ -1,5 +1,11 @@
 export type ModuleKey = 'attractions' | 'routes' | 'schedule'
 
+export interface AttractionImage {
+  src: string
+  alt: string
+  caption: string
+}
+
 export interface Attraction {
   id: string
   name: string
@@ -16,6 +22,7 @@ export interface Attraction {
   recommendedDuration: string
   priority: '必去' | '推荐'
   bestFor: string
+  images: AttractionImage[]
   tags: string[]
   status: 'empty' | 'draft' | 'ready'
 }

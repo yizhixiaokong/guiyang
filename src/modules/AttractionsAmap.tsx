@@ -14,8 +14,8 @@ interface AMapConfig {
 interface AMapMapInstance {
   addControl: (control: unknown) => void
   destroy: () => void
-  clearMap: () => void
   add: (markers: AMapMarkerInstance[]) => void
+  remove: (markers: AMapMarkerInstance[]) => void
   setFitView: (
     markers: AMapMarkerInstance[],
     immediately?: boolean,
@@ -69,23 +69,55 @@ const amapKey = import.meta.env.VITE_AMAP_KEY
 const amapSecurityJsCode = import.meta.env.VITE_AMAP_SECURITY_JS_CODE
 const amapServiceHost = import.meta.env.VITE_AMAP_SERVICE_HOST
 
-function createMarkerMarkup(attraction: Attraction, order: number, isSelected: boolean) {
+function createMarkerMarkup(attraction: Attraction, isSelected: boolean) {
+  const priorityClass = attraction.priority === '必去' ? 'is-must' : 'is-recommended'
+
   return `
-    <div class="amap-attraction-marker${isSelected ? ' is-selected' : ''}">
-      <span class="amap-attraction-order">${String(order + 1).padStart(2, '0')}</span>
+    <div class="amap-attraction-marker ${priorityClass}${isSelected ? ' is-selected' : ''}">
+      <span class="amap-attraction-pin-core" aria-hidden="true"></span>
+      <span class="amap-attraction-pin-tail"></span>
       <div class="amap-attraction-badge">
         <strong>${attraction.name}</strong>
-        <small>${attraction.priority}</small>
       </div>
     </div>
   `
 }
 
 function createInfoWindowMarkup(attraction: Attraction) {
+  const galleryMarkup = attraction.images.length
+    ? `
+      <section class="amap-info-gallery">
+        <figure class="amap-info-gallery-main">
+          <img src="${attraction.images[0].src}" alt="${attraction.images[0].alt}" />
+          <figcaption class="amap-info-gallery-caption">${attraction.images[0].caption}</figcaption>
+        </figure>
+        <div class="amap-info-gallery-thumbs">
+          ${attraction.images
+            .map(
+              (image, index) => `
+                <button
+                  type="button"
+                  class="amap-info-thumb${index === 0 ? ' is-active' : ''}"
+                  data-image-src="${image.src}"
+                  data-image-alt="${image.alt}"
+                  data-image-caption="${image.caption}"
+                  aria-label="切换到 ${attraction.name} 图片 ${index + 1}"
+                >
+                  <img src="${image.src}" alt="${image.alt}" />
+                </button>
+              `,
+            )
+            .join('')}
+        </div>
+      </section>
+    `
+    : ''
+
   return `
     <article class="amap-info-window">
       <p class="amap-info-kicker">${attraction.district} · ${attraction.category}</p>
       <h4>${attraction.name}</h4>
+      ${galleryMarkup}
       <p>${attraction.summary}</p>
       <dl>
         <div>
@@ -113,6 +145,42 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
   const infoWindowRef = useRef<AMapInfoWindowInstance | null>(null)
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isMapReady, setIsMapReady] = useState(false)
+
+  useEffect(() => {
+    const handleInfoThumbClick = (event: MouseEvent) => {
+      const target = event.target as HTMLElement | null
+      const thumbButton = target?.closest<HTMLButtonElement>('.amap-info-thumb')
+
+      if (!thumbButton) {
+        return
+      }
+
+      const galleryRoot = thumbButton.closest<HTMLElement>('.amap-info-gallery')
+      const mainImage = galleryRoot?.querySelector<HTMLImageElement>('.amap-info-gallery-main img')
+      const caption = galleryRoot?.querySelector<HTMLElement>('.amap-info-gallery-caption')
+      const imageSrc = thumbButton.dataset.imageSrc
+
+      if (!galleryRoot || !mainImage || !caption || !imageSrc) {
+        return
+      }
+
+      mainImage.src = imageSrc
+      mainImage.alt = thumbButton.dataset.imageAlt ?? ''
+      caption.textContent = thumbButton.dataset.imageCaption ?? ''
+
+      galleryRoot.querySelectorAll<HTMLButtonElement>('.amap-info-thumb').forEach((button) => {
+        button.classList.remove('is-active')
+      })
+
+      thumbButton.classList.add('is-active')
+    }
+
+    document.addEventListener('click', handleInfoThumbClick)
+
+    return () => {
+      document.removeEventListener('click', handleInfoThumbClick)
+    }
+  }, [])
 
   const mapConfigState = useMemo(() => {
     if (!amapKey) {
@@ -166,11 +234,11 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
 
         const map = new amapNamespace.Map(mapContainerRef.current, {
           viewMode: '3D',
-          zoom: 10.8,
+          zoom: 11.6,
           center: [106.7028, 26.5783],
-          pitch: 28,
-          rotation: -12,
-          mapStyle: 'amap://styles/whitesmoke',
+          pitch: 0,
+          rotation: 0,
+          mapStyle: 'amap://styles/normal',
         })
 
         map.addControl(new amapNamespace.Scale({ position: 'LB' }))
@@ -214,7 +282,9 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
     const map = mapRef.current
     const AMap = amapRef.current
 
-    map.clearMap()
+    if (markersRef.current.length > 0) {
+      map.remove(markersRef.current)
+    }
 
     const infoWindow = new AMap.InfoWindow({
       anchor: 'bottom-center',
@@ -226,7 +296,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
 
     infoWindowRef.current = infoWindow
 
-    const markers = attractions.map((attraction, index) => {
+    const markers = attractions.map((attraction) => {
       const isSelected = selectedAttractionIds.includes(attraction.id)
 
       const marker = new AMap.Marker({
@@ -234,7 +304,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
         offset: new AMap.Pixel(-20, -20),
         title: attraction.name,
         zIndex: isSelected ? 140 : 100,
-        content: createMarkerMarkup(attraction, index, isSelected),
+        content: createMarkerMarkup(attraction, isSelected),
       })
 
       marker.on('click', () => {
