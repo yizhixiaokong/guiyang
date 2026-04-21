@@ -569,7 +569,7 @@
   left: 0.08rem;
   top: 0.08rem;
   border-radius: 50% 50% 50% 0;
-  background: linear-gradient(180deg, #d85f3c, #bd4323);
+  background: linear-gradient(180deg, #5d6d69, #41514d);
   border: 1.5px solid rgb(255 246 237 / 0.96);
   transform: rotate(-45deg);
 }
@@ -603,14 +603,6 @@
   white-space: nowrap;
   color: rgb(31 40 37 / 0.68);
   font-weight: 600;
-}
-
-.amap-attraction-marker.is-must .amap-attraction-pin-core {
-  background: linear-gradient(180deg, #d85f3c, #bd4323);
-}
-
-.amap-attraction-marker.is-recommended .amap-attraction-pin-core {
-  background: linear-gradient(180deg, #2f7b74, #215e59);
 }
 
 .amap-attraction-marker.is-active .amap-attraction-pin-core {
