@@ -41,7 +41,7 @@ export function AttractionsPanel({
           <p className="section-kicker">Module 01</p>
           <h2>景点清单</h2>
           <p>
-            地图作为主舞台，清单只保留轻量筛选和勾选导出；下方详情区只展开当前查看或已选中的景点，避免把所有内容一次性铺满。
+            先从地图看景点分布，再按兴趣切换到单个景点的图片、门票、时长和亮点信息。
           </p>
         </div>
       </header>
@@ -69,9 +69,9 @@ export function AttractionsPanel({
           <div className="attraction-map-toolbar">
             <div>
               <p className="mini-label">AMap Live View</p>
-              <h3>地图优先浏览景点分布</h3>
+              <h3>景点地图总览</h3>
               <p>
-                点地图或点右侧简清单都能切换当前查看景点；已勾选的地点会保留在下方详情切换轨道里。
+                先看城区与花溪方向的分布，再切换到具体景点查看图集和出行信息。
               </p>
             </div>
             <div className="attraction-map-actions">
@@ -113,10 +113,10 @@ export function AttractionsPanel({
         <aside className="attraction-selector-panel">
           <div className="selector-header">
             <div>
-              <p className="mini-label">Quick Select</p>
-              <h3>轻量地点勾选</h3>
+              <p className="mini-label">Attraction Select</p>
+              <h3>景点选择</h3>
             </div>
-            <p>点名称查看，勾选加入导出清单。</p>
+            <p>点名称切换景点，勾选保留到行程清单。</p>
           </div>
 
           {attractions.length === 0 ? (
@@ -170,12 +170,12 @@ export function AttractionsPanel({
               {selectedAttractions.length > 0 ? 'Selected Detail' : 'Focused Detail'}
             </p>
             <h3>
-              {selectedAttractions.length > 0 ? '已选景点详情联动' : '当前查看景点详情'}
+              {selectedAttractions.length > 0 ? '已选景点详情' : '当前景点详情'}
             </h3>
             <p>
               {selectedAttractions.length > 0
-                ? '下方只展开当前勾选集合里的景点，不再把所有卡片同时铺开。'
-                : '还没有勾选时，会先展示当前地图或清单里聚焦的景点。'}
+                ? '在已选景点之间切换查看图片、门票、时长和亮点。'
+                : '先浏览当前景点的图片、门票、开放时间和游玩重点。'}
             </p>
           </div>
 
@@ -209,8 +209,8 @@ export function AttractionsPanel({
         {!detailAttraction ? (
           <article className="placeholder-card">
             <p className="mini-label">Attraction Detail Placeholder</p>
-            <h3>勾选或点击地图点位后在这里展开详情</h3>
-            <p>手机端建议先看地图，再在这里切换缩略图和实用信息。</p>
+            <h3>选择一个景点后在这里查看详情</h3>
+            <p>图片、门票、时长和亮点信息会集中显示在这里。</p>
           </article>
         ) : (
           <article key={detailAttraction.id} className="attraction-card attraction-card-featured">

@@ -71,11 +71,14 @@ const amapKey = import.meta.env.VITE_AMAP_KEY
 const amapSecurityJsCode = import.meta.env.VITE_AMAP_SECURITY_JS_CODE
 const amapServiceHost = import.meta.env.VITE_AMAP_SERVICE_HOST
 
-function createMarkerMarkup(attraction: Attraction, isSelected: boolean) {
+function createMarkerMarkup(
+  attraction: Attraction,
+  markerState: 'default' | 'active' | 'selected' | 'active-selected',
+) {
   const priorityClass = attraction.priority === '必去' ? 'is-must' : 'is-recommended'
 
   return `
-    <div class="amap-attraction-marker ${priorityClass}${isSelected ? ' is-selected' : ''}">
+    <div class="amap-attraction-marker ${priorityClass} is-${markerState}">
       <span class="amap-attraction-pin" aria-hidden="true">
         <span class="amap-attraction-pin-core"></span>
       </span>
@@ -156,6 +159,8 @@ export function AttractionsAmap({
   const amapRef = useRef<AMapNamespace | null>(null)
   const markersRef = useRef<AMapMarkerInstance[]>([])
   const infoWindowRef = useRef<AMapInfoWindowInstance | null>(null)
+  const hasFittedViewRef = useRef(false)
+  const attractionKeyRef = useRef('')
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isMapReady, setIsMapReady] = useState(false)
 
@@ -287,6 +292,8 @@ export function AttractionsAmap({
         mapRef.current = null
       }
 
+      hasFittedViewRef.current = false
+      attractionKeyRef.current = ''
       markersRef.current = []
       infoWindowRef.current = null
       amapRef.current = null
@@ -316,16 +323,29 @@ export function AttractionsAmap({
 
     infoWindowRef.current = infoWindow
 
+    const attractionKey = attractions
+      .map((attraction) => `${attraction.id}:${attraction.coordinates[0]},${attraction.coordinates[1]}`)
+      .join('|')
+
+    const shouldFitView = !hasFittedViewRef.current || attractionKeyRef.current !== attractionKey
+
     const markers = attractions.map((attraction) => {
-      const isSelected =
-        selectedAttractionIds.includes(attraction.id) || attraction.id === activeAttractionId
+      const isChecked = selectedAttractionIds.includes(attraction.id)
+      const isActive = attraction.id === activeAttractionId
+      const markerState = isChecked && isActive
+        ? 'active-selected'
+        : isChecked
+          ? 'selected'
+          : isActive
+            ? 'active'
+            : 'default'
 
       const marker = new AMap.Marker({
         position: attraction.coordinates,
         offset: new AMap.Pixel(-18, -52),
         title: attraction.name,
-        zIndex: isSelected ? 140 : 100,
-        content: createMarkerMarkup(attraction, isSelected),
+        zIndex: isChecked || isActive ? 140 : 100,
+        content: createMarkerMarkup(attraction, markerState),
       })
 
       marker.on('click', () => {
@@ -338,7 +358,13 @@ export function AttractionsAmap({
     })
 
     map.add(markers)
-    map.setFitView(markers, false, [72, 72, 72, 72])
+
+    if (shouldFitView) {
+      map.setFitView(markers, false, [72, 72, 72, 72])
+      hasFittedViewRef.current = true
+      attractionKeyRef.current = attractionKey
+    }
+
     markersRef.current = markers
   }, [activeAttractionId, attractions, isMapReady, onFocusAttraction, selectedAttractionIds])
 

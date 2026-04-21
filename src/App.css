@@ -169,6 +169,7 @@
 
 .module-tab strong {
   font-size: 1.2rem;
+  text-wrap: balance;
 }
 
 .module-tab small {
@@ -196,6 +197,7 @@
 
 .module-header h2 {
   margin-bottom: 0.4rem;
+  text-wrap: balance;
 }
 
 .section-intro {
@@ -312,6 +314,13 @@
   align-items: start;
 }
 
+.attraction-map-toolbar h3,
+.selector-header h3,
+.attraction-detail-header h3 {
+  margin-bottom: 0.3rem;
+  text-wrap: balance;
+}
+
 .attraction-map-toolbar,
 .attraction-selector-panel,
 .attraction-detail-shell {
@@ -324,6 +333,7 @@
   display: grid;
   justify-items: end;
   gap: 0.6rem;
+  flex: 0 0 auto;
 }
 
 .selection-chip {
@@ -361,10 +371,11 @@
 }
 
 .selector-header p:last-child {
-  max-width: 12rem;
+  max-width: 16rem;
   margin: 0;
   color: var(--ink-soft);
   font-size: 0.9rem;
+  line-height: 1.5;
 }
 
 .compact-checklist-list {
@@ -413,6 +424,7 @@
 
 .compact-checklist-text strong {
   font-size: 0.94rem;
+  text-wrap: balance;
 }
 
 .compact-checklist-text span {
@@ -460,6 +472,10 @@
   cursor: pointer;
   display: grid;
   gap: 0.14rem;
+}
+
+.detail-chip strong {
+  text-wrap: balance;
 }
 
 .detail-chip span {
@@ -525,13 +541,15 @@
 
 .amap-attraction-marker {
   position: relative;
-  width: 1.95rem;
+  width: 2.1rem;
   height: 2.85rem;
   color: #1f2825;
   overflow: visible;
 }
 
-.amap-attraction-marker.is-selected {
+.amap-attraction-marker.is-active,
+.amap-attraction-marker.is-selected,
+.amap-attraction-marker.is-active-selected {
   z-index: 2;
 }
 
@@ -539,7 +557,7 @@
   position: absolute;
   left: 0;
   top: 0;
-  width: 1.95rem;
+  width: 2.1rem;
   height: 2.85rem;
   filter: drop-shadow(0 9px 16px rgb(55 38 25 / 0.16));
 }
@@ -567,24 +585,24 @@
 
 .amap-attraction-badge {
   position: absolute;
-  left: 1.55rem;
-  top: 0.12rem;
+  left: 1.95rem;
+  top: 0.02rem;
   display: grid;
-  min-width: 4.1rem;
-  padding: 0.24rem 0.54rem 0.28rem;
+  min-width: 4.8rem;
+  padding: 0.3rem 0.62rem 0.34rem;
   border-radius: 0.82rem;
-  background: linear-gradient(180deg, rgb(255 252 248 / 0.82), rgb(252 245 238 / 0.78));
-  border: 1px solid rgb(124 91 63 / 0.1);
-  box-shadow: 0 8px 18px rgb(48 39 31 / 0.07);
+  background: linear-gradient(180deg, rgb(255 252 248 / 0.92), rgb(252 245 238 / 0.9));
+  border: 1px solid rgb(124 91 63 / 0.14);
+  box-shadow: 0 10px 20px rgb(48 39 31 / 0.09);
   backdrop-filter: blur(8px);
 }
 
 .amap-attraction-badge strong {
-  font-size: 0.72rem;
-  line-height: 1.1;
+  font-size: 0.82rem;
+  line-height: 1.15;
   white-space: nowrap;
   color: rgb(31 40 37 / 0.68);
-  font-weight: 500;
+  font-weight: 600;
 }
 
 .amap-attraction-marker.is-must .amap-attraction-pin-core {
@@ -595,13 +613,37 @@
   background: linear-gradient(180deg, #2f7b74, #215e59);
 }
 
-.amap-attraction-marker.is-selected .amap-attraction-pin-core {
+.amap-attraction-marker.is-active .amap-attraction-pin-core {
+  background: linear-gradient(180deg, #2f7b74, #215e59);
+  border-color: rgb(232 249 244 / 0.98);
   transform: rotate(-45deg) scale(1.06);
 }
 
+.amap-attraction-marker.is-selected .amap-attraction-pin-core {
+  background: linear-gradient(180deg, #dc633f, #c94422);
+  border-color: rgb(255 246 237 / 0.98);
+  transform: rotate(-45deg) scale(1.08);
+}
+
+.amap-attraction-marker.is-active-selected .amap-attraction-pin-core {
+  background: linear-gradient(180deg, #cf4324, #ab2f14);
+  border-color: rgb(255 246 237 / 0.98);
+  transform: rotate(-45deg) scale(1.1);
+}
+
+.amap-attraction-marker.is-active .amap-attraction-badge {
+  border-color: rgb(33 94 89 / 0.3);
+  box-shadow: 0 12px 24px rgb(35 64 59 / 0.14);
+}
+
 .amap-attraction-marker.is-selected .amap-attraction-badge {
-  border-color: rgb(201 68 44 / 0.3);
-  box-shadow: 0 12px 24px rgb(73 38 21 / 0.12);
+  border-color: rgb(201 68 44 / 0.46);
+  box-shadow: 0 12px 24px rgb(73 38 21 / 0.16);
+}
+
+.amap-attraction-marker.is-active-selected .amap-attraction-badge {
+  border-color: rgb(201 68 44 / 0.58);
+  box-shadow: 0 14px 28px rgb(73 38 21 / 0.18);
 }
 
 .amap-info-window {
@@ -807,6 +849,11 @@
 .action-button {
   background: var(--accent-strong);
   color: #fff7ea;
+  white-space: nowrap;
+}
+
+.ghost-button {
+  white-space: nowrap;
 }
 
 .action-button:disabled,

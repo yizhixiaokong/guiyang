@@ -21,7 +21,7 @@ export function RoutesPanel({
           <p className="section-kicker">Module 02</p>
           <h2>线路规划</h2>
           <p>
-            这个模块为多条候选线路预留切换和可视化区域。未来接入数据后，路线图上会重点呈现箭头、顺序编号和时间提示，而不是通用导航地图。
+            对比不同的一日路线安排，快速查看停留顺序、时间节奏和适合人群。
           </p>
         </div>
       </header>
@@ -30,7 +30,7 @@ export function RoutesPanel({
         <article className="metric-card">
           <span className="mini-label">候选线路数</span>
           <strong className="metric-value">{routePlans.length}</strong>
-          <p>支持多条路线方案并排切换，不只保留单条线路。</p>
+          <p>可在不同路线方案之间快速切换比较。</p>
         </article>
         <article className="metric-card">
           <span className="mini-label">可视化重点</span>
@@ -79,9 +79,9 @@ export function RoutesPanel({
           </div>
           <div className="route-map-caption">
             <p className="mini-label">Route Diagram Placeholder</p>
-            <h3>线路箭头与时间标注示意区</h3>
+            <h3>路线动线示意</h3>
             <p>
-              这里将用于绘制候选线路的串联关系、停留顺序、时间标记和出行方向。
+              用来查看景点串联顺序、停留节点和整体移动方向。
             </p>
           </div>
         </div>
@@ -125,14 +125,14 @@ export function RoutesPanel({
           ) : (
             <div className="empty-state">
               <p>当前还没有线路规划数据。</p>
-              <p>等你把外部 AI 生成的多条线路给我后，我会把这里改成真实的路线对比视图。</p>
+              <p>补入路线方案后，这里会展示不同路线的节奏与停留顺序。</p>
             </div>
           )}
         </aside>
       </div>
 
       <div className="stage-note">
-        当前版本优先把“路线表达方式”搭出来，而不是追求真实地图能力。后续如果确认需要接入真实地图，再单独升级这部分。
+        这一区域更适合做路线比较和节奏判断，而不是逐段导航。
       </div>
     </section>
   )
