@@ -74,8 +74,9 @@ function createMarkerMarkup(attraction: Attraction, isSelected: boolean) {
 
   return `
     <div class="amap-attraction-marker ${priorityClass}${isSelected ? ' is-selected' : ''}">
-      <span class="amap-attraction-pin-core" aria-hidden="true"></span>
-      <span class="amap-attraction-pin-tail"></span>
+      <span class="amap-attraction-pin" aria-hidden="true">
+        <span class="amap-attraction-pin-core"></span>
+      </span>
       <div class="amap-attraction-badge">
         <strong>${attraction.name}</strong>
       </div>
@@ -115,8 +116,13 @@ function createInfoWindowMarkup(attraction: Attraction) {
 
   return `
     <article class="amap-info-window">
-      <p class="amap-info-kicker">${attraction.district} · ${attraction.category}</p>
-      <h4>${attraction.name}</h4>
+      <header class="amap-info-header">
+        <div>
+          <p class="amap-info-kicker">${attraction.district} · ${attraction.category}</p>
+          <h4>${attraction.name}</h4>
+        </div>
+        <button type="button" class="amap-info-close" aria-label="关闭详情">×</button>
+      </header>
       ${galleryMarkup}
       <p>${attraction.summary}</p>
       <dl>
@@ -147,8 +153,15 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
   const [isMapReady, setIsMapReady] = useState(false)
 
   useEffect(() => {
-    const handleInfoThumbClick = (event: MouseEvent) => {
+    const handleInfoInteractions = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null
+      const closeButton = target?.closest<HTMLButtonElement>('.amap-info-close')
+
+      if (closeButton) {
+        mapRef.current?.clearInfoWindow?.()
+        return
+      }
+
       const thumbButton = target?.closest<HTMLButtonElement>('.amap-info-thumb')
 
       if (!thumbButton) {
@@ -175,10 +188,10 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
       thumbButton.classList.add('is-active')
     }
 
-    document.addEventListener('click', handleInfoThumbClick)
+    document.addEventListener('click', handleInfoInteractions)
 
     return () => {
-      document.removeEventListener('click', handleInfoThumbClick)
+      document.removeEventListener('click', handleInfoInteractions)
     }
   }, [])
 
@@ -288,7 +301,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
 
     const infoWindow = new AMap.InfoWindow({
       anchor: 'bottom-center',
-      offset: new AMap.Pixel(0, -26),
+      offset: new AMap.Pixel(0, -18),
       isCustom: true,
       autoMove: true,
       closeWhenClickMap: true,
@@ -301,7 +314,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
 
       const marker = new AMap.Marker({
         position: attraction.coordinates,
-        offset: new AMap.Pixel(-20, -20),
+        offset: new AMap.Pixel(-18, -52),
         title: attraction.name,
         zIndex: isSelected ? 140 : 100,
         content: createMarkerMarkup(attraction, isSelected),
