@@ -163,6 +163,15 @@ export function AttractionsAmap({
   const [loadError, setLoadError] = useState<string | null>(null)
   const [isMapReady, setIsMapReady] = useState(false)
 
+  const handleResetView = () => {
+    if (!mapRef.current || markersRef.current.length === 0) {
+      return
+    }
+
+    mapRef.current.setFitView(markersRef.current, false, [72, 72, 72, 72])
+    mapRef.current.clearInfoWindow?.()
+  }
+
   useEffect(() => {
     const handleInfoInteractions = (event: MouseEvent) => {
       const target = event.target as HTMLElement | null
@@ -371,6 +380,12 @@ export function AttractionsAmap({
   return (
     <div className="amap-shell" aria-label="贵阳景点高德地图">
       <div ref={mapContainerRef} className="amap-canvas" />
+
+      {mapConfigState.ready && !loadError && (
+        <button type="button" className="amap-reset-view" onClick={handleResetView}>
+          回到景点总览
+        </button>
+      )}
 
       {!mapConfigState.ready && (
         <div className="amap-overlay-state">
