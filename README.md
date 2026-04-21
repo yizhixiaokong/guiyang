@@ -5,13 +5,13 @@
 ## 当前实现范围
 
 - 顶部海报式首屏和三模块切换骨架
-- 景点清单模块的静态示意地图承载位、勾选清单和复制地点名称按钮
+- 景点清单模块的真实高德地图、勾选清单和复制地点名称按钮
 - 线路规划模块的多候选线路切换承载位和路线可视化占位
 - 详细时间计划表模块的空白承载位
 - 材料目录和结构化数据目录
 - `.github/skills/` 已加入 `.gitignore`
 
-当前不包含真实景点数据、真实线路数据、真实地图 SDK 接入和最终视觉定稿。
+当前不包含真实线路数据、路径规划服务接入和最终视觉定稿。
 
 ## 技术栈
 
@@ -24,6 +24,15 @@
 ```bash
 npm install
 npm run dev
+```
+
+如果要启用真实高德地图，还需要在项目根目录提供环境变量：
+
+```bash
+VITE_AMAP_KEY=你的高德 Web Key
+VITE_AMAP_SECURITY_JS_CODE=你的安全密钥
+# 生产环境建议改为代理方式
+# VITE_AMAP_SERVICE_HOST=https://your-domain/_AMapService
 ```
 
 构建生产版本：
@@ -56,7 +65,7 @@ npm run build
 
 ### 景点清单
 
-后续可把景点信息填入 `src/data/attractions/attractions.ts`，字段已经预留为景点名称、区域、推荐理由、标签等。页面会自动支持勾选和复制地点名称。
+后续可把景点信息填入 `src/data/attractions/attractions.ts`，字段已经预留为景点名称、区域、经纬度、推荐理由、标签等。页面会自动支持勾选、复制地点名称和地图点位展示。
 
 ### 线路规划
 
@@ -68,10 +77,14 @@ npm run build
 
 ## 地图策略
 
-当前版本采用“静态示意地图优先”的路线。原因很直接：这个项目是定制化视觉呈现，不是地图产品，初版先把布局、信息层级和路线表达做准，成本更低、改动也更快。后续如果确认必须上真实可缩放地图，再优先考虑高德 JS API。
+景点模块已经接入高德 JSAPI v2.0，当前只用了真实底图、点标记和信息窗体。
+
+- 开发环境可直接使用 `VITE_AMAP_KEY` + `VITE_AMAP_SECURITY_JS_CODE`
+- 生产环境建议改为 `VITE_AMAP_SERVICE_HOST` 代理，不要把安全密钥暴露到前端
+- 组件卸载时已调用 `map.destroy()`，避免 WebGL 上下文泄漏
 
 ## 下一阶段建议
 
-1. 把候选景点先整理到 `materials/references/` 或 `src/data/attractions/attractions.ts`
+1. 把你的高德 Key 和安全密钥填进本地环境变量，先确认景点地图能正常加载
 2. 把外部 AI 生成的多条线路结果整理到 `src/data/routes/routePlans.ts`
-3. 拿到详细时间计划表文本后，再单独定制第三模块
+3. 如果下一步要做真实线路规划，可以继续接入高德 Walking 或 Driving 服务

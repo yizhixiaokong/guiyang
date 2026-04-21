@@ -1,4 +1,5 @@
 import type { Attraction } from '../types'
+import { AttractionsAmap } from './AttractionsAmap'
 
 interface AttractionsPanelProps {
   attractions: Attraction[]
@@ -49,29 +50,21 @@ export function AttractionsPanel({
       </div>
 
       <div className="attraction-layout">
-        <div className="map-placeholder" aria-label="景点地图占位">
-          <div className="placeholder-grid" />
-          <div className="placeholder-pins" aria-hidden="true">
-            {attractions.map((attraction, index) => (
-              <div
-                key={attraction.id}
-                className="placeholder-pin"
-                style={{ left: attraction.mapPosition.left, top: attraction.mapPosition.top }}
-              >
-                {String(index + 1).padStart(2, '0')} {attraction.name}
-              </div>
-            ))}
-          </div>
+        <div className="map-placeholder" aria-label="景点地图">
+          <AttractionsAmap
+            attractions={attractions}
+            selectedAttractionIds={selectedAttractionIds}
+          />
           <div className="map-caption">
-            <p className="mini-label">Static Map Placeholder</p>
-            <h3>景点分布与优先级示意</h3>
+            <p className="mini-label">AMap Live View</p>
+            <h3>贵阳景点真实地图分布</h3>
             <p>
-              当前先用海报式点位标签表达“城市段”和“花溪段”的景点分布，后续路线模块会基于这些名称继续组织线路。
+              已切到真实高德地图底图。点击点位可看景点摘要，右侧勾选过的景点会在地图上同步高亮。
             </p>
             <div className="map-legend">
-              <span>城区聚合：黔灵山、甲秀楼、文昌阁、青云市集、民生路</span>
-              <span>花溪方向：青岩古镇、夜郎谷</span>
-              <span>文化补充：贵州省博物馆</span>
+              <span>城区段：黔灵山、甲秀楼、文昌阁、青云市集、民生路</span>
+              <span>花溪段：青岩古镇、夜郎谷</span>
+              <span>文化补充：贵州省博物馆，适合雨天或半日文化线</span>
             </div>
           </div>
         </div>

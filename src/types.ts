@@ -6,6 +6,7 @@ export interface Attraction {
   district: string
   category: string
   address: string
+  coordinates: [number, number]
   background: string
   summary: string
   recommendation: string
@@ -15,10 +16,6 @@ export interface Attraction {
   recommendedDuration: string
   priority: '必去' | '推荐'
   bestFor: string
-  mapPosition: {
-    left: string
-    top: string
-  }
   tags: string[]
   status: 'empty' | 'draft' | 'ready'
 }

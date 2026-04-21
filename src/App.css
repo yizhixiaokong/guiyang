@@ -236,11 +236,7 @@
 }
 
 .map-placeholder {
-  background:
-    radial-gradient(circle at 20% 18%, rgb(201 68 44 / 0.16), transparent 18%),
-    radial-gradient(circle at 80% 22%, rgb(26 86 80 / 0.18), transparent 16%),
-    radial-gradient(circle at 54% 74%, rgb(178 130 52 / 0.14), transparent 20%),
-    linear-gradient(180deg, rgb(254 248 240), rgb(249 238 221));
+  background: linear-gradient(180deg, rgb(252 246 235), rgb(247 238 223));
 }
 
 .route-map-placeholder {
@@ -252,31 +248,16 @@
   color: #f6ead7;
 }
 
-.placeholder-grid,
 .route-lines {
   position: absolute;
   inset: 1rem;
 }
 
-.placeholder-grid::before,
-.placeholder-grid::after,
 .route-lines::before,
 .route-lines::after {
   content: '';
   position: absolute;
   inset: 0;
-}
-
-.placeholder-grid::before {
-  background-image:
-    linear-gradient(rgb(44 68 59 / 0.1) 1px, transparent 1px),
-    linear-gradient(90deg, rgb(44 68 59 / 0.1) 1px, transparent 1px);
-  background-size: 2.8rem 2.8rem;
-}
-
-.placeholder-grid::after {
-  border: 1px dashed rgb(44 68 59 / 0.28);
-  inset: 0.6rem;
 }
 
 .route-lines::before {
@@ -303,6 +284,129 @@
   backdrop-filter: blur(10px);
 }
 
+.amap-shell,
+.amap-canvas {
+  position: absolute;
+  inset: 0;
+}
+
+.amap-shell {
+  background:
+    radial-gradient(circle at 20% 18%, rgb(201 68 44 / 0.12), transparent 18%),
+    radial-gradient(circle at 80% 22%, rgb(26 86 80 / 0.12), transparent 16%),
+    linear-gradient(180deg, rgb(254 248 240), rgb(249 238 221));
+}
+
+.amap-canvas {
+  z-index: 0;
+}
+
+.amap-overlay-state {
+  position: absolute;
+  inset: 1rem;
+  z-index: 1;
+  display: grid;
+  align-content: end;
+  gap: 0.5rem;
+  padding: 1.1rem;
+  background: linear-gradient(180deg, rgb(255 251 247 / 0.36), rgb(255 248 241 / 0.92));
+  border: 1px dashed var(--line-strong);
+}
+
+.amap-overlay-state.is-error {
+  border-style: solid;
+  border-color: rgb(201 68 44 / 0.5);
+}
+
+.amap-attraction-marker {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  padding: 0.4rem 0.55rem 0.4rem 0.4rem;
+  border-radius: 999px;
+  background: rgb(255 251 248 / 0.95);
+  border: 1px solid rgb(135 96 63 / 0.28);
+  box-shadow: 0 12px 28px rgb(69 42 26 / 0.15);
+  color: #2a2d2b;
+}
+
+.amap-attraction-marker.is-selected {
+  transform: translateY(-1px);
+  border-color: rgb(201 68 44 / 0.55);
+  box-shadow: 0 14px 30px rgb(201 68 44 / 0.22);
+}
+
+.amap-attraction-order {
+  width: 2rem;
+  height: 2rem;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+  background: var(--accent-strong);
+  color: #fff8ef;
+  font-family: var(--display);
+  font-size: 0.86rem;
+  line-height: 1;
+}
+
+.amap-attraction-badge {
+  display: grid;
+  gap: 0.12rem;
+}
+
+.amap-attraction-badge strong {
+  font-size: 0.88rem;
+}
+
+.amap-attraction-badge small {
+  color: var(--ink-soft);
+  font-size: 0.72rem;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+}
+
+.amap-info-window {
+  min-width: 14rem;
+  max-width: 18rem;
+  padding: 0.95rem 1rem;
+  border: 1px solid var(--line);
+  background: rgb(255 251 246 / 0.98);
+  box-shadow: 0 20px 40px rgb(42 45 43 / 0.16);
+}
+
+.amap-info-window h4 {
+  margin: 0.15rem 0 0.45rem;
+}
+
+.amap-info-kicker {
+  margin: 0;
+  font-size: 0.72rem;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--ink-soft);
+}
+
+.amap-info-window p {
+  margin: 0;
+}
+
+.amap-info-window dl {
+  margin: 0.75rem 0 0;
+  display: grid;
+  gap: 0.5rem;
+}
+
+.amap-info-window dl div {
+  display: flex;
+  justify-content: space-between;
+  gap: 0.8rem;
+  font-size: 0.9rem;
+}
+
+.amap-info-window dt {
+  color: var(--ink-soft);
+}
+
 .map-legend {
   display: grid;
   gap: 0.35rem;
@@ -315,13 +419,11 @@
   background: rgb(15 37 35 / 0.72);
 }
 
-.placeholder-pins,
 .route-nodes {
   position: absolute;
   inset: 0;
 }
 
-.placeholder-pin,
 .route-node {
   position: absolute;
   display: inline-flex;
@@ -333,17 +435,11 @@
   font-size: 0.85rem;
 }
 
-.placeholder-pin {
-  color: var(--accent-strong);
-  background: rgb(255 250 246 / 0.88);
-}
-
 .route-node {
   color: #f6ead7;
   background: rgb(201 68 44 / 0.2);
 }
 
-.placeholder-pin::before,
 .route-node::before {
   content: '';
   width: 0.6rem;
