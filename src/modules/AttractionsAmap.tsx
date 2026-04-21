@@ -50,6 +50,7 @@ interface AMapNamespace {
   ) => AMapMapInstance
   Scale: new (options: { position: string }) => unknown
   ToolBar: new (options: { position: string }) => unknown
+  MapType: new (options?: { position: string }) => unknown
   InfoWindow: new (options: {
     anchor: string
     offset: unknown
@@ -75,10 +76,8 @@ function createMarkerMarkup(
   attraction: Attraction,
   markerState: 'default' | 'active' | 'selected' | 'active-selected',
 ) {
-  const priorityClass = attraction.priority === '必去' ? 'is-must' : 'is-recommended'
-
   return `
-    <div class="amap-attraction-marker ${priorityClass} is-${markerState}">
+    <div class="amap-attraction-marker is-${markerState}">
       <span class="amap-attraction-pin" aria-hidden="true">
         <span class="amap-attraction-pin-core"></span>
       </span>
@@ -246,7 +245,7 @@ export function AttractionsAmap({
     AMapLoader.load({
       key: amapKey!,
       version: '2.0',
-      plugins: ['AMap.Scale', 'AMap.ToolBar'],
+      plugins: ['AMap.Scale', 'AMap.ToolBar', 'AMap.MapType'],
     })
       .then((AMap) => {
         if (disposed || !mapContainerRef.current) {
@@ -268,6 +267,7 @@ export function AttractionsAmap({
 
         map.addControl(new amapNamespace.Scale({ position: 'LB' }))
         map.addControl(new amapNamespace.ToolBar({ position: 'RT' }))
+        map.addControl(new amapNamespace.MapType({ position: 'RB' }))
 
         mapRef.current = map
         amapRef.current = amapNamespace
