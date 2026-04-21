@@ -11,6 +11,7 @@
   position: relative;
   overflow: hidden;
   border: 1px solid var(--line);
+  border-radius: var(--radius-panel);
   background: var(--paper);
   box-shadow: var(--paper-shadow);
 }
@@ -93,6 +94,7 @@
 .stage-note,
 .timeline-placeholder {
   border: 1px solid var(--line);
+  border-radius: var(--radius-card);
   background: var(--paper-soft);
 }
 
@@ -112,6 +114,7 @@
   flex-direction: column;
   gap: 1rem;
   padding: 1.35rem;
+  border-radius: calc(var(--radius-panel) - 0.25rem);
   background:
     linear-gradient(180deg, rgb(255 248 236 / 0.96), rgb(253 244 226 / 0.98)),
     repeating-linear-gradient(
@@ -247,6 +250,7 @@
 .attraction-map-board {
   min-height: 38rem;
   border: 1px solid var(--line);
+  border-radius: calc(var(--radius-panel) - 0.2rem);
   background: linear-gradient(180deg, rgb(245 240 231 / 0.98), rgb(241 233 220 / 0.98));
 }
 
@@ -295,6 +299,7 @@
   right: 1.2rem;
   bottom: 1.2rem;
   padding: 1rem;
+  border-radius: var(--radius-card);
   background: rgb(255 252 247 / 0.82);
   backdrop-filter: blur(10px);
 }
@@ -326,6 +331,7 @@
 .attraction-detail-shell {
   padding: 1rem;
   border: 1px solid var(--line);
+  border-radius: var(--radius-card);
   background: linear-gradient(180deg, rgb(255 251 246 / 0.94), rgb(252 245 236 / 0.9));
 }
 
@@ -392,6 +398,7 @@
   gap: 0.55rem;
   padding: 0.45rem;
   border: 1px solid rgb(124 91 63 / 0.1);
+  border-radius: calc(var(--radius-card) - 0.25rem);
   background: rgb(255 252 248 / 0.86);
   transition:
     border-color 180ms ease,
@@ -467,6 +474,7 @@
   min-width: 9rem;
   padding: 0.7rem 0.85rem;
   border: 1px solid var(--line);
+  border-radius: var(--radius-control);
   background: rgb(255 248 239 / 0.84);
   text-align: left;
   cursor: pointer;
@@ -490,6 +498,7 @@
 
 .attraction-card-featured {
   border: 1px solid var(--line);
+  border-radius: var(--radius-card);
   background: rgb(255 251 245 / 0.9);
 }
 
@@ -498,6 +507,7 @@
   gap: 0.55rem;
   padding: 0.9rem 1rem;
   border: 1px solid rgb(124 91 63 / 0.12);
+  border-radius: calc(var(--radius-card) - 0.2rem);
   background: linear-gradient(180deg, rgb(255 248 241 / 0.92), rgb(255 243 232 / 0.88));
 }
 
@@ -530,6 +540,7 @@
   align-content: end;
   gap: 0.5rem;
   padding: 1.1rem;
+  border-radius: var(--radius-card);
   background: linear-gradient(180deg, rgb(255 251 247 / 0.36), rgb(255 248 241 / 0.92));
   border: 1px dashed var(--line-strong);
 }
@@ -646,6 +657,7 @@
   appearance: none;
   padding: 0.62rem 0.9rem;
   border: 1px solid rgb(124 91 63 / 0.16);
+  border-radius: var(--radius-control);
   background: linear-gradient(180deg, rgb(255 252 248 / 0.94), rgb(252 245 238 / 0.92));
   color: #22312e;
   font: inherit;
@@ -667,6 +679,7 @@
   max-width: 19rem;
   padding: 0.95rem 1rem;
   border: 1px solid var(--line);
+  border-radius: var(--radius-card);
   background: rgb(255 251 246 / 0.98);
   box-shadow: 0 20px 40px rgb(42 45 43 / 0.16);
 }
@@ -855,6 +868,7 @@
 .route-switcher button {
   appearance: none;
   border: 1px solid var(--line-strong);
+  border-radius: var(--radius-control);
   background: transparent;
   color: inherit;
   padding: 0.7rem 1rem;
@@ -900,6 +914,7 @@
 .timeline-item {
   padding: 0.95rem 1rem;
   border: 1px solid var(--line);
+  border-radius: var(--radius-card);
   background: rgb(255 251 245 / 0.86);
 }
 
@@ -935,6 +950,7 @@
 .attraction-gallery-empty {
   padding: 0.95rem 1rem;
   border: 1px dashed var(--line-strong);
+  border-radius: var(--radius-card);
   background: rgb(255 248 241 / 0.78);
 }
 
@@ -944,6 +960,7 @@
   margin: 0;
   min-height: 16rem;
   border: 1px solid rgb(124 91 63 / 0.14);
+  border-radius: var(--radius-card);
   background: rgb(243 236 226 / 0.94);
 }
 
@@ -963,6 +980,7 @@
   display: grid;
   gap: 0.18rem;
   padding: 0.7rem 0.85rem;
+  border-radius: calc(var(--radius-card) - 0.2rem);
   background: linear-gradient(180deg, rgb(255 251 247 / 0.82), rgb(255 244 234 / 0.92));
   backdrop-filter: blur(12px);
 }

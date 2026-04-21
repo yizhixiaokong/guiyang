@@ -12,6 +12,10 @@
   --accent-deep: #1a5650;
   --highlight: #b28234;
   --paper-shadow: 0 18px 40px rgba(52, 38, 25, 0.14);
+  --radius-panel: 2rem;
+  --radius-card: 1.45rem;
+  --radius-control: 1.15rem;
+  --radius-soft: 0.95rem;
   --display: 'Cormorant Garamond', 'Noto Serif SC', serif;
   --serif: 'Noto Serif SC', serif;
   --sans: 'DM Sans', 'PingFang SC', 'Microsoft YaHei', sans-serif;
