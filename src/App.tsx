@@ -11,6 +11,9 @@ import type { ModuleKey } from './types'
 function App() {
   const [activeModule, setActiveModule] = useState<ModuleKey>('attractions')
   const [selectedAttractionIds, setSelectedAttractionIds] = useState<string[]>([])
+  const [activeAttractionId, setActiveAttractionId] = useState<string | null>(
+    attractions[0]?.id ?? null,
+  )
   const [copyState, setCopyState] = useState<'idle' | 'copied' | 'error'>('idle')
   const [activeRouteId, setActiveRouteId] = useState<string | null>(
     routePlans[0]?.id ?? null,
@@ -22,11 +25,30 @@ function App() {
 
   const handleAttractionToggle = (attractionId: string) => {
     setCopyState('idle')
-    setSelectedAttractionIds((currentIds) =>
-      currentIds.includes(attractionId)
-        ? currentIds.filter((id) => id !== attractionId)
-        : [...currentIds, attractionId],
-    )
+    setSelectedAttractionIds((currentIds) => {
+      const willSelect = !currentIds.includes(attractionId)
+      const nextIds = willSelect
+        ? [...currentIds, attractionId]
+        : currentIds.filter((id) => id !== attractionId)
+
+      setActiveAttractionId((currentActiveId) => {
+        if (willSelect) {
+          return attractionId
+        }
+
+        if (currentActiveId !== attractionId) {
+          return currentActiveId ?? nextIds[0] ?? attractions[0]?.id ?? null
+        }
+
+        return nextIds[0] ?? attractions.find((attraction) => attraction.id !== attractionId)?.id ?? null
+      })
+
+      return nextIds
+    })
+  }
+
+  const handleAttractionFocus = (attractionId: string) => {
+    setActiveAttractionId(attractionId)
   }
 
   const handleCopySelected = async () => {
@@ -120,7 +142,9 @@ function App() {
           <AttractionsPanel
             attractions={attractions}
             selectedAttractionIds={selectedAttractionIds}
+            activeAttractionId={activeAttractionId}
             onToggleAttraction={handleAttractionToggle}
+            onFocusAttraction={handleAttractionFocus}
             onCopySelected={handleCopySelected}
             copyState={copyState}
           />

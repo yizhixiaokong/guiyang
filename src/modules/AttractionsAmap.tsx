@@ -5,6 +5,8 @@ import type { Attraction } from '../types'
 interface AttractionsAmapProps {
   attractions: Attraction[]
   selectedAttractionIds: string[]
+  activeAttractionId: string | null
+  onFocusAttraction: (attractionId: string) => void
 }
 
 interface AMapConfig {
@@ -143,7 +145,12 @@ function createInfoWindowMarkup(attraction: Attraction) {
   `
 }
 
-export function AttractionsAmap({ attractions, selectedAttractionIds }: AttractionsAmapProps) {
+export function AttractionsAmap({
+  attractions,
+  selectedAttractionIds,
+  activeAttractionId,
+  onFocusAttraction,
+}: AttractionsAmapProps) {
   const mapContainerRef = useRef<HTMLDivElement | null>(null)
   const mapRef = useRef<AMapMapInstance | null>(null)
   const amapRef = useRef<AMapNamespace | null>(null)
@@ -310,7 +317,8 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
     infoWindowRef.current = infoWindow
 
     const markers = attractions.map((attraction) => {
-      const isSelected = selectedAttractionIds.includes(attraction.id)
+      const isSelected =
+        selectedAttractionIds.includes(attraction.id) || attraction.id === activeAttractionId
 
       const marker = new AMap.Marker({
         position: attraction.coordinates,
@@ -321,6 +329,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
       })
 
       marker.on('click', () => {
+        onFocusAttraction(attraction.id)
         infoWindow.setContent(createInfoWindowMarkup(attraction))
         infoWindow.open(map, attraction.coordinates)
       })
@@ -331,7 +340,7 @@ export function AttractionsAmap({ attractions, selectedAttractionIds }: Attracti
     map.add(markers)
     map.setFitView(markers, false, [72, 72, 72, 72])
     markersRef.current = markers
-  }, [attractions, isMapReady, selectedAttractionIds])
+  }, [activeAttractionId, attractions, isMapReady, onFocusAttraction, selectedAttractionIds])
 
   return (
     <div className="amap-shell" aria-label="贵阳景点高德地图">
