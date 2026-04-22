@@ -41,6 +41,33 @@ VITE_AMAP_SECURITY_JS_CODE=你的安全密钥
 npm run build
 ```
 
+## GitHub Pages 部署
+
+仓库已经补好 GitHub Pages Actions workflow。默认行为：推送到 `main` 后自动构建并发布到 Pages。
+
+发布前需要先在仓库里配置：
+
+1. 打开 GitHub 仓库的 Settings -> Pages，把 Source 切到 GitHub Actions。
+2. 打开 Settings -> Secrets and variables -> Actions，按需添加这些 Secrets：
+
+```text
+VITE_AMAP_KEY
+VITE_AMAP_SECURITY_JS_CODE
+VITE_AMAP_SERVICE_HOST
+```
+
+说明：
+
+- 如果 GitHub Pages 直接走前端鉴权，只需要前两个 Secret。
+- 如果地图改为你自己的代理服务，就改填 `VITE_AMAP_SERVICE_HOST`，同时可以不再提供 `VITE_AMAP_SECURITY_JS_CODE`。
+- Vite 会在 GitHub Actions 构建时自动把资源路径切到仓库子路径，例如 `/guiyang/`，本地开发仍然保持根路径 `/`。
+
+首次发布后，页面地址通常是：
+
+```text
+https://<你的 GitHub 用户名>.github.io/guiyang/
+```
+
 ## 目录说明
 
 ```text
