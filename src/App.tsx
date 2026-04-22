@@ -91,6 +91,9 @@ function App() {
   const selectedAttractionNames = attractions
     .filter((attraction) => selectedAttractionIds.includes(attraction.id))
     .map((attraction) => attraction.name)
+  const mustVisitCount = attractions.filter((attraction) => attraction.priority === '必去').length
+  const freeAttractionCount = attractions.filter((attraction) => attraction.ticket.includes('免费')).length
+  const districtCount = new Set(attractions.map((attraction) => attraction.district)).size
 
   const handleAttractionToggle = (attractionId: string) => {
     setCopyState('idle')
@@ -181,13 +184,27 @@ function App() {
         </div>
 
         <aside className="hero-board">
-          <p className="board-kicker">初始制作边界</p>
-          <ul>
-            {tripMeta.boundaryNotes.map((note) => (
-              <li key={note}>{note}</li>
-            ))}
-          </ul>
-          <div className="board-ribbon">定制视觉展示，不追求复用</div>
+          <p className="board-kicker">行程速览</p>
+          <div className="hero-glance-grid" aria-label="行程速览">
+            <article>
+              <span>景点总数</span>
+              <strong>{attractions.length}</strong>
+            </article>
+            <article>
+              <span>必去点位</span>
+              <strong>{mustVisitCount}</strong>
+            </article>
+            <article>
+              <span>免费点位</span>
+              <strong>{freeAttractionCount}</strong>
+            </article>
+            <article>
+              <span>覆盖区域</span>
+              <strong>{districtCount} 区</strong>
+            </article>
+          </div>
+          <div className="board-ribbon">先看地图分布，再按兴趣做勾选与导出。</div>
+          <p className="hero-board-note">当前包含城市地标、老城街巷、花溪山水、博物馆与交通节点图示。</p>
         </aside>
       </header>
 
