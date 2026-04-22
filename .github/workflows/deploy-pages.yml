@@ -18,6 +18,8 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    environment:
+      name: github-pages
     env:
       VITE_AMAP_KEY: ${{ secrets.VITE_AMAP_KEY }}
       VITE_AMAP_SECURITY_JS_CODE: ${{ secrets.VITE_AMAP_SECURITY_JS_CODE }}
