@@ -215,4 +215,73 @@ export const attractions: Attraction[] = [
     tags: ['小吃', '烟火气', '本地', '顺路', '免费'],
     status: 'ready',
   },
+  {
+    id: 'shengfu-north-street',
+    name: '省府北街',
+    district: '云岩区',
+    category: '文艺老街、文创街巷、Citywalk 打卡地',
+    address: '云岩区，近文昌阁与民生路',
+    coordinates: [106.715455, 26.581792],
+    background:
+      '贵阳老城核心街巷之一，明清街巷肌理与现代文创业态叠在一起，步行体验完整。',
+    summary:
+      '青石板路、红砖木门头和小店密度都很高，是适合慢逛和拍照的城市段落。',
+    recommendation:
+      '建议与文昌阁、民生路、蔡家街串成一段 Citywalk，白天逛店、傍晚吃饭衔接很顺。',
+    highlights: ['青石板路', '复古红砖墙', '古着与手作店', '咖啡馆与茶馆', '逛吃一体'],
+    ticket: '免费',
+    openingHours: '全天开放（多数店铺约 10:00-22:00）',
+    recommendedDuration: '1-1.5 小时',
+    priority: '推荐',
+    bestFor: '文艺步行、拍照、城市小众街巷体验',
+    images: [],
+    tags: ['Citywalk', '文创', '老街', '拍照', '免费'],
+    status: 'ready',
+  },
+  {
+    id: 'tianhe-pool',
+    name: '天河潭',
+    district: '花溪区',
+    category: '4A 景区、喀斯特山水',
+    address: '花溪区石板镇，距市中心约 24 公里',
+    coordinates: [106.580558, 26.440169],
+    background:
+      '原名天生桥，1992 年开放，被称为“贵州山水浓缩盆景”，是典型喀斯特景观组合。',
+    summary:
+      '山、水、洞、潭、瀑、峡谷集中在一个景区内，适合把自然风光一次看全。',
+    recommendation:
+      '建议预留半天以上，优先安排套票与观光车，体力消耗更可控，游览节奏会更顺。',
+    highlights: ['钙化滩瀑布', '卧龙飞瀑', '水洞船游', '旱洞钟乳石', '卧龙湖与百步桥'],
+    ticket: '基础票 80 元，套票约 150 元',
+    openingHours: '8:30-18:00，17:00 停止入园',
+    recommendedDuration: '4-5 小时',
+    priority: '必去',
+    bestFor: '山水自然、半日外出、家庭出游',
+    images: [],
+    tags: ['山水', '喀斯特', '瀑布', '花溪', '必去'],
+    status: 'ready',
+  },
+  {
+    id: 'dongshan-temple',
+    name: '东山寺（栖霞寺）',
+    district: '云岩区',
+    category: '古寺遗址、历史古迹、市级文保',
+    address: '云岩区栖霞路 17 号（栖霞岭）',
+    coordinates: [106.727618, 26.578084],
+    background:
+      '明洪武年间始建，曾为明清“贵阳十景”之首，现以遗址与摩崖石刻为主要看点。',
+    summary:
+      '体量不大但视野极好，登顶后可 360° 俯瞰贵阳老城，夜景时段体验尤其突出。',
+    recommendation:
+      '适合安排在傍晚，作为短时登山和城市俯瞰节点，和老城夜间行程衔接自然。',
+    highlights: ['摩崖石刻', '历史寺址', '老城全景俯瞰', '日落夜景', '15-25 分钟登山步道'],
+    ticket: '免费',
+    openingHours: '夏季 8:30-20:30，冬季 8:30-19:30',
+    recommendedDuration: '1-1.5 小时',
+    priority: '推荐',
+    bestFor: '夜景、俯瞰视角、历史遗址爱好者',
+    images: [],
+    tags: ['俯瞰', '夜景', '古迹', '登山', '免费'],
+    status: 'ready',
+  },
 ]
