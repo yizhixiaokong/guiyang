@@ -649,6 +649,58 @@
   box-shadow: 0 14px 28px rgb(73 38 21 / 0.18);
 }
 
+.amap-transit-marker {
+  position: relative;
+  width: 1.9rem;
+  height: 2.2rem;
+  overflow: visible;
+}
+
+.amap-transit-pin {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 1.9rem;
+  height: 1.9rem;
+  border-radius: 50%;
+  background: linear-gradient(180deg, #2b66c5, #1d4b98);
+  border: 1.5px solid rgb(236 244 255 / 0.95);
+  box-shadow: 0 9px 16px rgb(20 49 96 / 0.25);
+}
+
+.amap-transit-pin::after {
+  content: 'R';
+  position: absolute;
+  inset: 0;
+  display: grid;
+  place-items: center;
+  font-size: 0.78rem;
+  font-weight: 700;
+  letter-spacing: 0.02em;
+  color: rgb(244 249 255 / 0.95);
+}
+
+.amap-transit-badge {
+  position: absolute;
+  left: 1.75rem;
+  top: 0.18rem;
+  display: grid;
+  min-width: 4.2rem;
+  padding: 0.25rem 0.56rem 0.28rem;
+  border-radius: 0.76rem;
+  background: linear-gradient(180deg, rgb(247 251 255 / 0.95), rgb(237 246 255 / 0.93));
+  border: 1px solid rgb(33 75 152 / 0.24);
+  box-shadow: 0 10px 20px rgb(20 49 96 / 0.14);
+}
+
+.amap-transit-badge strong {
+  font-size: 0.78rem;
+  line-height: 1.15;
+  white-space: nowrap;
+  color: rgb(29 68 130 / 0.9);
+  font-weight: 700;
+}
+
 .amap-reset-view {
   position: absolute;
   top: 1rem;

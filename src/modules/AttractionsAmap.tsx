@@ -72,6 +72,19 @@ const amapKey = import.meta.env.VITE_AMAP_KEY
 const amapSecurityJsCode = import.meta.env.VITE_AMAP_SECURITY_JS_CODE
 const amapServiceHost = import.meta.env.VITE_AMAP_SERVICE_HOST
 
+const stationMarkers = [
+  {
+    id: 'guiyang-north-railway-station',
+    name: '贵阳北站',
+    coordinates: [106.674554, 26.619478] as [number, number],
+  },
+  {
+    id: 'guiyang-east-railway-station',
+    name: '贵阳东站',
+    coordinates: [106.744611, 26.664717] as [number, number],
+  },
+] as const
+
 function createMarkerMarkup(
   attraction: Attraction,
   markerState: 'default' | 'active' | 'selected' | 'active-selected',
@@ -83,6 +96,17 @@ function createMarkerMarkup(
       </span>
       <div class="amap-attraction-badge">
         <strong>${attraction.name}</strong>
+      </div>
+    </div>
+  `
+}
+
+function createStationMarkerMarkup(stationName: string) {
+  return `
+    <div class="amap-transit-marker">
+      <span class="amap-transit-pin" aria-hidden="true"></span>
+      <div class="amap-transit-badge">
+        <strong>${stationName}</strong>
       </div>
     </div>
   `
@@ -366,15 +390,27 @@ export function AttractionsAmap({
       return marker
     })
 
-    map.add(markers)
+    const stationOverlays = stationMarkers.map((station) => {
+      return new AMap.Marker({
+        position: station.coordinates,
+        offset: new AMap.Pixel(-12, -42),
+        title: station.name,
+        zIndex: 90,
+        content: createStationMarkerMarkup(station.name),
+      })
+    })
+
+    const allMarkers = [...markers, ...stationOverlays]
+
+    map.add(allMarkers)
 
     if (shouldFitView) {
-      map.setFitView(markers, false, [72, 72, 72, 72])
+      map.setFitView(allMarkers, false, [72, 72, 72, 72])
       hasFittedViewRef.current = true
       attractionKeyRef.current = attractionKey
     }
 
-    markersRef.current = markers
+    markersRef.current = allMarkers
   }, [activeAttractionId, attractions, isMapReady, onFocusAttraction, selectedAttractionIds])
 
   return (
