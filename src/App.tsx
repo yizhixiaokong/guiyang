@@ -141,7 +141,7 @@ function App() {
       key: 'attractions' as const,
       kicker: 'Module 01',
       title: '景点清单',
-      description: '图钉地图 + 勾选复制，后续用于喂给外部 AI 做线路规划。',
+      description: '地图看分布、勾选做取舍，先把想去的点位快速收敛出来。',
     },
     {
       key: 'routes' as const,
@@ -153,7 +153,7 @@ function App() {
       key: 'schedule' as const,
       kicker: 'Module 03',
       title: '详细时间计划表',
-      description: '本轮只留承载位，等你提供其他 AI 数据后再定制。',
+      description: '按天拆解早中晚节奏，补齐后可直接转成可执行行程。',
     },
   ]
 
