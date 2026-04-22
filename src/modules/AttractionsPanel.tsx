@@ -99,7 +99,7 @@ export function AttractionsPanel({
               <div className="map-legend compact">
                 <span>城区段：黔灵山、甲秀楼、文昌阁、省府北街、东山寺、青云市集、民生路</span>
                 <span>花溪段：青岩古镇、夜郎谷、天河潭</span>
-                <span>文化补充：贵州省博物馆</span>
+                <span>文化补充：贵州省博物馆、贵州省地质博物馆</span>
                 <span>交通节点（仅图示）：贵阳北站、贵阳东站</span>
               </div>
             </div>
