@@ -52,8 +52,12 @@ export function RoutesPanel({ routePlans, activeRouteId, onRouteChange }: Routes
             className="ghost-button summary-toggle"
             onClick={() => setIsSummaryOpen((s) => !s)}
             aria-pressed={isSummaryOpen}
+            aria-label={isSummaryOpen ? '隐藏详情' : '显示详情'}
           >
-            {isSummaryOpen ? '隐藏详情' : '显示详情'}
+            <svg className="toggle-icon" viewBox="0 0 24 24" width="16" height="16" fill="none" xmlns="http://www.w3.org/2000/svg" aria-hidden="true">
+              <path d="M6 9l6 6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+            <span className="toggle-label">{isSummaryOpen ? '隐藏' : '详情'}</span>
           </button>
         </div>
       </div>
@@ -93,7 +97,7 @@ export function RoutesPanel({ routePlans, activeRouteId, onRouteChange }: Routes
                 </div>
               </div>
 
-              <div className="route-timeline">
+              <div className="route-timeline" aria-live="polite">
                 {activeRoute.stops.map((stop, idx) => (
                   <div
                     key={`${stop.id}-${stop.order ?? idx}`}
@@ -105,12 +109,12 @@ export function RoutesPanel({ routePlans, activeRouteId, onRouteChange }: Routes
                       if (e.key === 'Enter' || e.key === ' ') setHighlightedStopId(stop.id)
                     }}
                   >
-                    <div className="timeline-marker">
-                      <span className="timeline-order">{String(stop.order).padStart(2, '0')}</span>
-                    </div>
-                    <div className="timeline-content">
-                      <strong className="stop-label">{stop.label}</strong>
-                      <div className="stop-time">{stop.timeHint}</div>
+                    <div className="timeline-card">
+                      <div className="order-badge">{String(stop.order).padStart(2, '0')}</div>
+                      <div className="card-body">
+                        <div className="stop-label">{stop.label}</div>
+                        <div className="stop-time visually-hidden">{stop.timeHint}</div>
+                      </div>
                     </div>
                   </div>
                 ))}
@@ -124,7 +128,7 @@ export function RoutesPanel({ routePlans, activeRouteId, onRouteChange }: Routes
         </aside>
       </div>
 
-      <div className="stage-note">以地图为视觉核心，详情区域可在移动端折叠为底部抽屉。</div>
+      
     </section>
   )
 }

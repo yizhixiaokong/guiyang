@@ -93,24 +93,29 @@ const stationMarkers = [
 export function createMarkerMarkup(
   attraction: Attraction,
   markerState: 'default' | 'active' | 'selected' | 'active-selected',
+  order?: string,
 ) {
+  const orderMarkup = order ? `<span class="route-marker-order-inline">${order}</span>` : ''
   return `
     <div class="amap-attraction-marker is-${markerState}">
       <span class="amap-attraction-pin" aria-hidden="true">
         <span class="amap-attraction-pin-core"></span>
       </span>
       <div class="amap-attraction-badge">
+        ${orderMarkup}
         <strong>${attraction.name}</strong>
       </div>
     </div>
   `
 }
 
-export function createStationMarkerMarkup(stationName: string) {
+export function createStationMarkerMarkup(stationName: string, order?: string) {
+  const orderMarkup = order ? `<span class="route-marker-order-inline">${order}</span>` : ''
   return `
     <div class="amap-transit-marker">
       <span class="amap-transit-pin" aria-hidden="true"></span>
       <div class="amap-transit-badge">
+        ${orderMarkup}
         <strong>${stationName}</strong>
       </div>
     </div>

@@ -10,7 +10,7 @@ export const tripMeta: TripMeta = {
   style: '旅行海报信息图感',
   mapStrategy: '高德真实地图 + 信息海报布局',
   footerSummary: '当前版本已覆盖景点筛选、路线浏览与时间计划入口，适合直接用于行前决策。',
-  lastUpdated: '更新于 2026.04.21',
+  lastUpdated: '更新于 2026.04.24',
   boundaryNotes: [
     '城市地标、历史街巷与自然景区可在同一视图快速对比。',
     '先从地图分布筛点，再进入路线与时间安排会更高效。',

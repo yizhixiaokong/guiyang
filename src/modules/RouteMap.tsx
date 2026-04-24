@@ -7,6 +7,7 @@ import {
   createInfoWindowMarkup,
   createStationMarkerMarkup,
 } from './AttractionsAmap'
+import { disperseCoords, offsetSegment, unorderedSegmentKey } from './mapUtils'
 
 const amapKey = import.meta.env.VITE_AMAP_KEY
 const amapSecurityJsCode = import.meta.env.VITE_AMAP_SECURITY_JS_CODE
@@ -23,7 +24,7 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
   const mapRef = useRef<any | null>(null)
   const amapRef = useRef<any | null>(null)
   const overlaysRef = useRef<any[]>([])
-  const markerMapRef = useRef<Record<string, { marker: any; coord: [number, number]; attraction?: any }>>({})
+  const markerMapRef = useRef<Record<string, Array<{ marker: any; coord: [number, number]; attraction?: any; idx?: number }>>>({})
   const infoWindowRef = useRef<any | null>(null)
 
   useEffect(() => {
@@ -116,23 +117,56 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
       return stationMap[id]
     }
 
-    const coords = stopsList.map((s) => getCoord(s.id)).filter(Boolean) as [number, number][]
-    if (coords.length === 0) return
-    if (coords.length === 1) {
-      map.setCenter(coords[0])
+    const rawCoords = stopsList.map((s) => getCoord(s.id)).filter(Boolean) as [number, number][]
+    if (rawCoords.length === 0) return
+    if (rawCoords.length === 1) {
+      map.setCenter(rawCoords[0])
       map.setZoom(14)
       return
     }
 
-    
+    // marker 分散，避免完全重合
+    const markerCoords = disperseCoords(rawCoords, 18)
 
-    // draw single line; prefer native BezierCurve/Polyline with showDir
+    // draw path：若存在重复段则对重复段偏移绘制，否则整线绘制
     const PRIMARY_COLOR = '#e0533b'
-    let lineAdded = false
-    try {
-      if (typeof amap.BezierCurve !== 'undefined') {
-        const bez = new amap.BezierCurve({
-          path: coords,
+
+    const segments: Array<[number, number][]> = []
+    for (let i = 0; i < rawCoords.length - 1; i++) {
+      segments.push([rawCoords[i], rawCoords[i + 1]])
+    }
+
+    const counts = new Map<string, number>()
+    segments.forEach((seg) => {
+      const key = unorderedSegmentKey(seg[0], seg[1])
+      counts.set(key, (counts.get(key) ?? 0) + 1)
+    })
+
+    const needSegmentOffset = Array.from(counts.values()).some((v) => v > 1)
+
+    if (!needSegmentOffset) {
+      // 单条线
+      let lineAdded = false
+      try {
+        if (typeof amap.BezierCurve !== 'undefined') {
+          const bez = new amap.BezierCurve({
+            path: rawCoords,
+            strokeColor: PRIMARY_COLOR,
+            strokeWeight: 8,
+            strokeOpacity: 0.96,
+            lineJoin: 'round',
+            lineCap: 'round',
+            showDir: true,
+          })
+          map.add(bez)
+          overlaysRef.current.push(bez)
+          lineAdded = true
+        }
+      } catch {}
+
+      if (!lineAdded) {
+        const simpleLine = new amap.Polyline({
+          path: rawCoords,
           strokeColor: PRIMARY_COLOR,
           strokeWeight: 8,
           strokeOpacity: 0.96,
@@ -140,29 +174,46 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
           lineCap: 'round',
           showDir: true,
         })
-        map.add(bez)
-        overlaysRef.current.push(bez)
-        lineAdded = true
+        map.add(simpleLine)
+        overlaysRef.current.push(simpleLine)
       }
-    } catch {}
+    } else {
+      const occurrenceIndex = new Map<string, number>()
+      const stepMeters = 8
+      segments.forEach((seg) => {
+        const key = unorderedSegmentKey(seg[0], seg[1])
+        const total = counts.get(key) ?? 1
+        const idx = occurrenceIndex.get(key) ?? 0
+        occurrenceIndex.set(key, idx + 1)
+        const offset = (idx - (total - 1) / 2) * stepMeters
+        const shifted = offsetSegment(seg as [number, number][], offset)
 
-    if (!lineAdded) {
-      const simpleLine = new amap.Polyline({
-        path: coords,
-        strokeColor: PRIMARY_COLOR,
-        strokeWeight: 8,
-        strokeOpacity: 0.96,
-        lineJoin: 'round',
-        lineCap: 'round',
-        showDir: true,
+        try {
+          const p = new amap.Polyline({
+            path: shifted,
+            strokeColor: PRIMARY_COLOR,
+            strokeWeight: 6,
+            strokeOpacity: 0.92,
+            lineJoin: 'round',
+            lineCap: 'round',
+            showDir: true,
+          })
+          map.add(p)
+          overlaysRef.current.push(p)
+        } catch (e) {
+          try {
+            const p = new amap.Polyline({ path: seg, strokeColor: PRIMARY_COLOR, strokeWeight: 6, showDir: true })
+            map.add(p)
+            overlaysRef.current.push(p)
+          } catch {}
+        }
       })
-      map.add(simpleLine)
-      overlaysRef.current.push(simpleLine)
     }
 
-    // stop markers (reuse attraction markers)
+    // stop markers（使用分散坐标），并在分散时绘制 spoke 回连原始坐标
     stopsList.forEach((stop, idx) => {
-      const coord = coords[idx]
+      const raw = rawCoords[idx]
+      const coord = markerCoords[idx]
       if (!coord) return
       const order = stop.order ?? idx + 1
 
@@ -170,10 +221,10 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
 
       let content = ''
       if (attraction) {
-        content = `<div class="route-marker-wrapper">${createMarkerMarkup(attraction, 'default')}<div class="route-marker-order">${String(order).padStart(2, '0')}</div></div>`
+        content = `<div class="route-marker-wrapper">${createMarkerMarkup(attraction, 'default', String(order).padStart(2, '0'))}</div>`
       } else {
         const stationName = stop.label ?? '站点'
-        content = `<div class="route-marker-wrapper">${createStationMarkerMarkup(stationName)}<div class="route-marker-order">${String(order).padStart(2, '0')}</div></div>`
+        content = `<div class="route-marker-wrapper">${createStationMarkerMarkup(stationName, String(order).padStart(2, '0'))}</div>`
       }
 
       const marker = new amap.Marker({
@@ -204,7 +255,24 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
       map.add(marker)
       overlaysRef.current.push(marker)
 
-      markerMapRef.current[stop.id] = { marker, coord, attraction }
+      try {
+        if (raw && (raw[0] !== coord[0] || raw[1] !== coord[1])) {
+          const spoke = new amap.Polyline({
+            path: [raw, coord],
+            strokeColor: '#999',
+            strokeOpacity: 0.45,
+            strokeWeight: 1,
+            lineDash: [6, 4],
+          })
+          map.add(spoke)
+          overlaysRef.current.push(spoke)
+        }
+      } catch {}
+
+      const key = stop.id
+      const entry = { marker, coord, attraction, idx }
+      if (!markerMapRef.current[key]) markerMapRef.current[key] = []
+      markerMapRef.current[key].push(entry)
     })
 
     try {
@@ -213,11 +281,14 @@ export function RouteMap({ stops, highlightStopId, onStopClick }: RouteMapProps)
   }
 
   function focusStop(stopId: string) {
-    const entry = markerMapRef.current[stopId]
     const map = mapRef.current
     const amap = amapRef.current
-    if (!entry || !map || !amap) return
+    if (!map || !amap) return
 
+    const entries = markerMapRef.current[stopId]
+    if (!entries || entries.length === 0) return
+
+    const entry = Array.isArray(entries) ? entries[0] : entries
     const { coord, attraction } = entry
     try {
       map.setCenter(coord)

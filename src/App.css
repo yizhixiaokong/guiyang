@@ -4,7 +4,6 @@
   gap: 1.5rem;
   padding: 1.5rem;
 }
-
 .hero-panel,
 .stage-panel,
 .page-footer {
@@ -71,19 +70,18 @@
   transform: rotate(10deg);
 }
 
+/* Hero: subtitle / meta grid / glance */
 .hero-subtitle {
   max-width: 42rem;
   font-size: 1.08rem;
   color: var(--ink-soft);
 }
-
 .hero-meta-grid {
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
   gap: 1rem;
   margin-top: 2rem;
 }
-
 .hero-meta-grid div,
 .board-ribbon,
 .metric-card,
@@ -97,18 +95,15 @@
   border-radius: var(--radius-card);
   background: var(--paper-soft);
 }
-
 .hero-meta-grid div {
   display: flex;
   flex-direction: column;
   gap: 0.4rem;
   padding: 1rem;
 }
-
 .hero-meta-grid span {
   color: var(--ink-soft);
 }
-
 .hero-board {
   display: flex;
   flex-direction: column;
@@ -125,13 +120,11 @@
       transparent 16px
     );
 }
-
 .hero-glance-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.7rem;
 }
-
 .hero-glance-grid article {
   display: grid;
   gap: 0.2rem;
@@ -140,17 +133,105 @@
   border-radius: 0.7rem;
   background: rgb(255 251 245 / 0.82);
 }
-
 .hero-glance-grid span {
   font-size: 0.76rem;
   color: var(--ink-soft);
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
-
 .hero-glance-grid strong {
   font-size: 1.1rem;
   color: rgb(56 37 22 / 0.92);
+}
+
+/* Timeline: 小卡 + 圆环 + 序号（简洁版） */
+.route-timeline {
+  position: relative;
+  padding-left: 3.2rem;
+}
+.route-timeline::before {
+  content: '';
+  position: absolute;
+  left: 1.6rem;
+  top: 0.6rem;
+  bottom: 0.6rem;
+  width: 2px;
+  background: rgba(224,83,59,0.06);
+  border-radius: 2px;
+}
+.timeline-item {
+  display: flex;
+  gap: 0.75rem;
+  margin: 0.6rem 0;
+  align-items: flex-start;
+}
+.timeline-marker { display: none; }
+.timeline-card {
+  position: relative;
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+  background: linear-gradient(180deg, rgba(255,251,245,0.95), rgba(255,249,241,0.95));
+  border-radius: 10px;
+  padding: 10px 14px;
+  border: 1px solid rgba(224,83,59,0.04);
+}
+.order-badge {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.18rem 0.5rem;
+  min-width: 2rem;
+  border-radius: 0.6rem;
+  background: rgba(224,83,59,0.06);
+  border: 1px solid rgba(224,83,59,0.12);
+  color: #c8422c;
+  font-weight: 700;
+  font-size: 0.95rem;
+}
+.card-body .stop-label {
+  color: #b02b20;
+  font-weight: 700;
+  font-size: 0.98rem;
+}
+.card-body .stop-time {
+  color: #666;
+  font-size: 0.86rem;
+  margin-top: 4px;
+}
+.timeline-item.is-active .marker-ring {
+  background: rgba(224,83,59,0.08);
+  box-shadow: 0 6px 16px rgba(200,60,50,0.06);
+}
+.timeline-item.is-active .order-badge {
+  background: linear-gradient(90deg, rgba(224,82,61,1), rgba(201,68,44,1));
+  color: #fff;
+  border-color: rgba(224,82,61,0.9);
+}
+.timeline-item.is-active .card-body .stop-label {
+  color: #7b231b;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 640px) {
+  .route-timeline { padding-left: 2.4rem; }
+  .route-timeline::before { left: 1.2rem; }
+  .timeline-marker { width: 2.4rem; min-width: 2.4rem; }
+  .marker-ring { width: 28px; height: 28px; }
+  .order-badge { padding: 0.12rem 0.45rem; font-size: 0.85rem; min-width: 1.8rem; border-radius: 0.5rem; }
 }
 
 .board-ribbon {
@@ -259,6 +340,87 @@
   gap: 1rem;
 }
 
+/* toolbar: keep date tabs and actions on one line and restyle summary toggle */
+.routes-toolbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 1rem;
+  flex-wrap: nowrap;
+}
+/* Date tabs */
+.date-tabs {
+  gap: 0.75rem;
+  align-items: center;
+  overflow-x: auto;
+  padding-bottom: 0.15rem;
+  -webkit-overflow-scrolling: touch;
+}
+.date-tab {
+  flex: 0 0 auto;
+  min-width: 8.5rem;
+  appearance: none;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, #fff, #fff8ec);
+  padding: 0.65rem 1rem;
+  min-height: 3rem;
+  padding: 0.45rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 120ms ease, color 120ms ease;
+}
+.toolbar-actions {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex: 0 0 auto;
+}
+
+.summary-toggle {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.42rem 0.72rem;
+  border-radius: 999px;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, #fff, #fff8ec);
+  color: #7c4a3a;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform .12s ease, box-shadow .12s ease, background .12s ease, color .12s ease;
+}
+.summary-toggle .toggle-icon {
+  transition: transform .22s ease;
+  width: 16px;
+  height: 16px;
+}
+.summary-toggle[aria-pressed="true"] {
+  background: linear-gradient(90deg, #e0533b, #c9442c);
+  color: #fff;
+  border-color: #c9442c;
+  box-shadow: 0 8px 20px rgba(201,68,44,0.12);
+}
+.summary-toggle[aria-pressed="true"] .toggle-icon {
+  transform: rotate(180deg);
+}
+.toggle-label { font-size: 0.95rem; }
+@media (max-width: 640px) {
+  .toggle-label { display: none; }
+  .date-tab { min-width: 7rem; min-height: 2.6rem; padding: 0.6rem 0.9rem; }
+}
+
+/* when summary panel is closed, collapse layout to a single column (map only) */
+.routes-layout:not(.summary-open) {
+  grid-template-columns: 1fr;
+}
+
+.route-summary.is-closed {
+  display: none;
+}
+
 .attraction-stage-layout {
   display: grid;
   grid-template-columns: minmax(0, 1.75fr) minmax(17rem, 0.72fr);
@@ -310,19 +472,17 @@
 .route-lines::before {
   background:
     linear-gradient(115deg, transparent 15%, rgb(246 234 215 / 0.85) 16%, transparent 17%),
-    linear-gradient(205deg, transparent 48%, rgb(246 234 215 / 0.72) 49%, transparent 50%),
     linear-gradient(85deg, transparent 72%, rgb(201 68 44 / 0.8) 73%, transparent 74%);
+  padding: 0.65rem 1rem;
 }
 
 .route-lines::after {
   inset: 1rem;
   border: 1px solid rgb(246 234 215 / 0.18);
 }
-
-/* Date tabs */
 .date-tabs {
   display: flex;
-  gap: 0.5rem;
+  gap: 0.75rem;
   padding: 0.25rem;
   align-items: center;
   overflow-x: auto;
@@ -330,9 +490,9 @@
 
 .date-tab {
   appearance: none;
-  border: 1px solid rgba(255,255,255,0.06);
-  background: rgba(255,255,255,0.04);
-  color: #f6ead7;
+  border: 1px solid rgba(0,0,0,0.06);
+  background: linear-gradient(180deg, #fff, #fff8ec);
+  color: #7c4a3a;
   padding: 0.5rem 0.9rem;
   border-radius: 999px;
   cursor: pointer;
@@ -340,14 +500,27 @@
   gap: 0.5rem;
   align-items: center;
   min-width: 6.25rem;
-  transition: transform 160ms ease, box-shadow 160ms ease;
+  transition: transform 160ms ease, box-shadow 160ms ease, background 120ms ease, color 120ms ease;
+}
+
+.date-tab:hover,
+.date-tab:focus {
+  box-shadow: 0 6px 18px rgba(0,0,0,0.06);
+  transform: translateY(-1px);
+  outline: none;
 }
 
 .date-tab.is-active {
-  background: linear-gradient(90deg, rgba(224,82,61,0.9), rgba(201,68,44,0.9));
+  background: linear-gradient(90deg, rgba(224,82,61,0.95), rgba(201,68,44,0.95));
   color: white;
   box-shadow: 0 6px 20px rgba(224,82,61,0.14);
   transform: translateY(-2px);
+}
+
+.date-tab .tab-sub {
+  opacity: 0.9;
+  color: rgba(124,74,58,0.9);
+  font-size: 0.85rem;
 }
 
 /* Timeline (route stops) */
