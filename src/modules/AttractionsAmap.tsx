@@ -83,6 +83,11 @@ const stationMarkers = [
     name: '贵阳东站',
     coordinates: [106.744611, 26.664717] as [number, number],
   },
+  {
+    id: 'hanting-guiyang-north',
+    name: '汉庭酒店（贵阳北站店）',
+    coordinates: [106.664088, 26.625049] as [number, number],
+  },
 ] as const
 
 function createMarkerMarkup(

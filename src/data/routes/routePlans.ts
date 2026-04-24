@@ -10,14 +10,14 @@ export const routePlans: RoutePlan[] = [
 		suitableFor: '首次到访、家庭与轻徒步',
 		status: 'ready',
 		stops: [
-			{ id: 'guiyang-north-railway-station', label: '贵阳北站（酒店）', timeHint: '出发', order: 1 },
+			{ id: 'hanting-guiyang-north', label: '汉庭酒店（贵阳北站店）', timeHint: '出发', order: 1 },
 			{ id: 'qianlingshan-park', label: '黔灵山公园', timeHint: '上午', order: 2 },
 			{ id: 'minsheng-road', label: '民生路（小吃）', timeHint: '午餐', order: 3 },
 			{ id: 'wenchang-pavilion', label: '文昌阁', timeHint: '下午', order: 4 },
 			{ id: 'shengfu-north-street', label: '省府北街', timeHint: '下午', order: 5 },
 			{ id: 'jiaxiu-tower', label: '甲秀楼', timeHint: '傍晚/夜景', order: 6 },
 			{ id: 'qingyun-market', label: '青云市集', timeHint: '夜间', order: 7 },
-			{ id: 'guiyang-north-railway-station', label: '返回贵阳北站（酒店）', timeHint: '结束', order: 8 },
+			{ id: 'hanting-guiyang-north', label: '返回汉庭酒店（贵阳北站店）', timeHint: '结束', order: 8 },
 		],
 	},
 	{
@@ -29,7 +29,7 @@ export const routePlans: RoutePlan[] = [
 		suitableFor: '文化/古镇慢游',
 		status: 'ready',
 		stops: [
-			{ id: 'guiyang-north-railway-station', label: '酒店出发（贵阳北站）', timeHint: '出发', order: 1 },
+			{ id: 'hanting-guiyang-north', label: '酒店出发（汉庭酒店）', timeHint: '出发', order: 1 },
 			{ id: 'guizhou-geology-museum', label: '贵州省地质博物馆', timeHint: '上午', order: 2 },
 			{ id: 'qingyan-ancient-town', label: '青岩古镇', timeHint: '中午/下午', order: 3 },
 			// 弹性备选，可根据时间选择前置/后置/略过
@@ -47,7 +47,7 @@ export const routePlans: RoutePlan[] = [
 		status: 'ready',
 		stops: [
 			{ id: 'guizhou-museum', label: '贵州省博物馆', timeHint: '上午', order: 1 },
-			{ id: 'guiyang-north-railway-station', label: '返回酒店并退房（贵阳北站附近）', timeHint: '午前', order: 2 },
+			{ id: 'hanting-guiyang-north', label: '返回汉庭酒店并退房', timeHint: '午前', order: 2 },
 			{ id: 'guiyang-east-railway-station', label: '贵阳东站（出发）', timeHint: '出发', order: 3 },
 		],
 	},

@@ -93,6 +93,7 @@ export function RouteMap({ stops }: RouteMapProps) {
     const stationMap: Record<string, [number, number]> = {
       'guiyang-north-railway-station': [106.674554, 26.619478],
       'guiyang-east-railway-station': [106.744611, 26.664717],
+      'hanting-guiyang-north': [106.664088, 26.625049],
     }
 
     const getCoord = (id: string): [number, number] | undefined => {
