@@ -90,7 +90,7 @@ const stationMarkers = [
   },
 ] as const
 
-function createMarkerMarkup(
+export function createMarkerMarkup(
   attraction: Attraction,
   markerState: 'default' | 'active' | 'selected' | 'active-selected',
 ) {
@@ -106,7 +106,7 @@ function createMarkerMarkup(
   `
 }
 
-function createStationMarkerMarkup(stationName: string) {
+export function createStationMarkerMarkup(stationName: string) {
   return `
     <div class="amap-transit-marker">
       <span class="amap-transit-pin" aria-hidden="true"></span>
@@ -117,7 +117,7 @@ function createStationMarkerMarkup(stationName: string) {
   `
 }
 
-function createInfoWindowMarkup(attraction: Attraction) {
+export function createInfoWindowMarkup(attraction: Attraction) {
   const galleryMarkup = attraction.images.length
     ? `
       <section class="amap-info-gallery">

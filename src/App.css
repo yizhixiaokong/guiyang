@@ -255,7 +255,7 @@
 .attraction-layout,
 .routes-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.3fr) minmax(18rem, 0.9fr);
+  grid-template-columns: minmax(0, 1.8fr) minmax(18rem, 0.72fr);
   gap: 1rem;
 }
 
@@ -292,6 +292,7 @@
     linear-gradient(rgb(255 255 255 / 0.04) 1px, transparent 1px);
   background-size: auto, 2.5rem 2.5rem, 2.5rem 2.5rem;
   color: #f6ead7;
+  min-height: 44rem;
 }
 
 .route-lines {
@@ -316,6 +317,101 @@
 .route-lines::after {
   inset: 1rem;
   border: 1px solid rgb(246 234 215 / 0.18);
+}
+
+/* Date tabs */
+.date-tabs {
+  display: flex;
+  gap: 0.5rem;
+  padding: 0.25rem;
+  align-items: center;
+  overflow-x: auto;
+}
+
+.date-tab {
+  appearance: none;
+  border: 1px solid rgba(255,255,255,0.06);
+  background: rgba(255,255,255,0.04);
+  color: #f6ead7;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  cursor: pointer;
+  display: inline-flex;
+  gap: 0.5rem;
+  align-items: center;
+  min-width: 6.25rem;
+  transition: transform 160ms ease, box-shadow 160ms ease;
+}
+
+.date-tab.is-active {
+  background: linear-gradient(90deg, rgba(224,82,61,0.9), rgba(201,68,44,0.9));
+  color: white;
+  box-shadow: 0 6px 20px rgba(224,82,61,0.14);
+  transform: translateY(-2px);
+}
+
+/* Timeline (route stops) */
+.route-timeline {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  padding: 0.25rem 0;
+}
+
+.timeline-item {
+  display: flex;
+  gap: 0.75rem;
+  align-items: flex-start;
+  padding: 0.6rem;
+  border-radius: 0.65rem;
+  cursor: pointer;
+  transition: background 160ms ease, transform 160ms ease;
+}
+
+.timeline-item:hover {
+  background: rgba(0,0,0,0.04);
+  transform: translateY(-2px);
+}
+
+.timeline-marker {
+  width: 2.4rem;
+  height: 2.4rem;
+  display: grid;
+  place-items: center;
+  background: var(--paper);
+  border: 1px solid var(--line);
+  border-radius: 999px;
+  font-weight: 700;
+  color: var(--ink-soft);
+}
+
+.timeline-item.is-active .timeline-marker {
+  background: linear-gradient(90deg, rgba(224,82,61,1), rgba(201,68,44,1));
+  color: #fff;
+  box-shadow: 0 6px 18px rgba(224,82,61,0.16);
+}
+
+.timeline-content .stop-time {
+  color: var(--ink-soft);
+  font-size: 0.9rem;
+}
+
+.route-map-board-wrapper {
+  min-height: 44rem;
+}
+
+.route-marker-wrapper { position: relative; display: inline-block }
+.route-marker-order {
+  position: absolute;
+  right: -8px;
+  top: -8px;
+  background: rgba(255,255,255,0.95);
+  color: #c8422c;
+  border-radius: 0.6rem;
+  padding: 0.15rem 0.45rem;
+  font-weight: 700;
+  font-size: 0.75rem;
+  border: 1px solid rgba(0,0,0,0.06);
 }
 
 .map-caption,
@@ -1244,7 +1340,7 @@
 
 .route-summary-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.75rem;
 }
 

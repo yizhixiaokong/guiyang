@@ -2,8 +2,21 @@ import type { RoutePlan } from '../../types'
 
 export const routePlans: RoutePlan[] = [
 	{
-		id: 'day-1-2026-05-02',
-		name: '第一天 — 2026-05-02',
+		id: 'day-1-2026-05-01',
+		name: '第一天 — 2026-05-01',
+		summary: '到达日：晚上抵达贵阳北站并入住酒店，建议休息调整。',
+		totalDuration: '晚上',
+		intensity: '轻松',
+		suitableFor: '抵达日、休息调整',
+		status: 'ready',
+		stops: [
+			{ id: 'guiyang-north-arrival', label: '晚上抵达贵阳北站', timeHint: '到达', order: 1 },
+			{ id: 'hanting-guiyang-north', label: '入住汉庭酒店（贵阳北站店）', timeHint: '入住', order: 2 },
+		],
+	},
+	{
+		id: 'day-2-2026-05-02',
+		name: '第二天 — 2026-05-02',
 		summary: '固定行程：城市步行与夜游组合，适合首日熟悉城市脉络。',
 		totalDuration: '6-8 小时',
 		intensity: '中等',
@@ -21,8 +34,8 @@ export const routePlans: RoutePlan[] = [
 		],
 	},
 	{
-		id: 'day-2-2026-05-03',
-		name: '第二天 — 2026-05-03',
+		id: 'day-3-2026-05-03',
+		name: '第三天 — 2026-05-03',
 		summary: '上午博物馆，下午青岩古镇；全天保留弹性备选景点。',
 		totalDuration: '全天（弹性）',
 		intensity: '轻松/弹性',
@@ -35,11 +48,13 @@ export const routePlans: RoutePlan[] = [
 			// 弹性备选，可根据时间选择前置/后置/略过
 			{ id: 'guiyang-north-cathedral', label: '贵阳北天主教堂（可选）', timeHint: '可选', order: 4 },
 			{ id: 'guiyang-white-palace', label: '贵阳白宫（可选）', timeHint: '可选', order: 5 },
+			{ id: 'yelanggou', label: '夜郎谷（可选）', timeHint: '可选', order: 6 },
+			{ id: 'hanting-guiyang-north', label: '返回汉庭酒店（贵阳北站店）', timeHint: '结束', order: 7 },
 		],
 	},
 	{
-		id: 'day-3-2026-05-04',
-		name: '第三天 — 2026-05-04',
+		id: 'day-4-2026-05-04',
+		name: '第四天 — 2026-05-04',
 		summary: '轻松返程：博物馆半日 + 前往贵阳东站返程。',
 		totalDuration: '半天',
 		intensity: '轻松',

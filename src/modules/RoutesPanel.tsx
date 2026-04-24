@@ -1,4 +1,5 @@
 import type { RoutePlan } from '../types'
+import { useState, useEffect } from 'react'
 import { RouteMap } from './RouteMap'
 
 interface RoutesPanelProps {
@@ -7,87 +8,80 @@ interface RoutesPanelProps {
   onRouteChange: (routeId: string) => void
 }
 
-export function RoutesPanel({
-  routePlans,
-  activeRouteId,
-  onRouteChange,
-}: RoutesPanelProps) {
+export function RoutesPanel({ routePlans, activeRouteId, onRouteChange }: RoutesPanelProps) {
+  const [isSummaryOpen, setIsSummaryOpen] = useState(true)
+  const [highlightedStopId, setHighlightedStopId] = useState<string | null>(null)
+
   const activeRoute =
     routePlans.find((routePlan) => routePlan.id === activeRouteId) ?? routePlans[0] ?? null
 
+  useEffect(() => {
+    // clear any highlighted stop when switching routes/dates
+    setHighlightedStopId(null)
+  }, [activeRoute?.id])
+
   return (
-    <section className="module-shell">
+    <section className="module-shell routes-shell">
       <header className="module-header">
         <div className="section-intro">
           <p className="section-kicker">Module 02</p>
           <h2>线路规划</h2>
-          <p>
-            对比不同的一日路线安排，快速查看停留顺序、时间节奏和适合人群。
-          </p>
+          <p>已确定每日主线；切换日期即可查看当天线路（地图以线与箭头呈现）。</p>
         </div>
       </header>
 
-      <div className="metric-strip" aria-label="线路模块状态">
-        <article className="metric-card">
-          <span className="mini-label">候选线路数</span>
-          <strong className="metric-value">{routePlans.length}</strong>
-          <p>可在不同路线方案之间快速切换比较。</p>
-        </article>
-        <article className="metric-card">
-          <span className="mini-label">可视化重点</span>
-          <strong className="metric-value">Flow</strong>
-          <p>凸显地点顺序、时间段和移动方向。</p>
-        </article>
-        <article className="metric-card">
-          <span className="mini-label">当前地图方案</span>
-          <strong className="metric-value">Static</strong>
-          <p>静态示意图优先，等信息层级稳定后再考虑真实地图。</p>
-        </article>
-      </div>
-
-      <div className="route-switcher" aria-label="候选线路切换">
-        {routePlans.length === 0 ? (
-          <button type="button" className="ghost-button" disabled>
-            暂无候选线路数据
-          </button>
-        ) : (
-          routePlans.map((routePlan) => (
+      <div className="routes-toolbar">
+        <div className="date-tabs" role="tablist" aria-label="按天切换线路">
+          {routePlans.map((routePlan) => (
             <button
               key={routePlan.id}
-              type="button"
-              className={routePlan.id === activeRoute?.id ? 'active' : ''}
+              role="tab"
+              aria-selected={routePlan.id === activeRoute?.id}
+              className={`date-tab ${routePlan.id === activeRoute?.id ? 'is-active' : ''}`}
               onClick={() => onRouteChange(routePlan.id)}
             >
-              {routePlan.name}
+              <span className="tab-title">{routePlan.name}</span>
+              <span className="tab-sub">{routePlan.totalDuration}</span>
             </button>
-          ))
-        )}
+          ))}
+        </div>
+
+        <div className="toolbar-actions">
+          <button
+            type="button"
+            className="ghost-button summary-toggle"
+            onClick={() => setIsSummaryOpen((s) => !s)}
+            aria-pressed={isSummaryOpen}
+          >
+            {isSummaryOpen ? '隐藏详情' : '显示详情'}
+          </button>
+        </div>
       </div>
 
-      <div className="routes-layout">
-        <div className="route-map-placeholder" aria-label="线路地图">
+      <div className={`routes-layout ${isSummaryOpen ? 'summary-open' : ''}`}>
+        <div className="route-map-area" aria-label="线路地图">
             <div className="route-map-board-wrapper">
-              <RouteMap stops={activeRoute?.stops ?? []} />
+              <RouteMap
+                stops={activeRoute?.stops ?? []}
+                highlightStopId={highlightedStopId}
+                onStopClick={(id) => setHighlightedStopId(id)}
+              />
             </div>
-            <div className="route-map-caption">
-              <p className="mini-label">当日线路</p>
-              <h3>{activeRoute?.name ?? '线路详情'}</h3>
-              <p>地图仅展示当前所选日期的景点顺序与移动方向（线 + 箭头）。</p>
-            </div>
-          </div>
+        </div>
 
-        <aside className="route-summary">
+        <aside className={`route-summary ${isSummaryOpen ? 'is-open' : 'is-closed'}`}>
           <header>
             <div>
-              <p className="mini-label">Current Route</p>
-              <h3>{activeRoute?.name ?? '等待外部 AI 输出候选线路'}</h3>
+              <p className="mini-label">当日线路</p>
+              <h3>{activeRoute?.name ?? '无线路数据'}</h3>
             </div>
             <span className="status-pill">{activeRoute?.status ?? 'empty'}</span>
           </header>
 
           {activeRoute ? (
             <>
-              <p>{activeRoute.summary}</p>
+              <p className="route-summary-intro">{activeRoute.summary}</p>
+
               <div className="route-summary-grid">
                 <div>
                   <span className="mini-label">总时长</span>
@@ -97,33 +91,40 @@ export function RoutesPanel({
                   <span className="mini-label">强度</span>
                   <strong>{activeRoute.intensity}</strong>
                 </div>
-                <div>
-                  <span className="mini-label">适合人群</span>
-                  <strong>{activeRoute.suitableFor}</strong>
-                </div>
               </div>
-              <ul className="route-stop-list">
-                {activeRoute.stops.map((stop) => (
-                  <li key={stop.id}>
-                    <span className="mini-label">Stop {stop.order}</span>
-                    <strong>{stop.label}</strong>
-                    <span>{stop.timeHint}</span>
-                  </li>
+
+              <div className="route-timeline">
+                {activeRoute.stops.map((stop, idx) => (
+                  <div
+                    key={`${stop.id}-${stop.order ?? idx}`}
+                    className={`timeline-item ${highlightedStopId === stop.id ? 'is-active' : ''}`}
+                    onClick={() => setHighlightedStopId(stop.id)}
+                    role="button"
+                    tabIndex={0}
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter' || e.key === ' ') setHighlightedStopId(stop.id)
+                    }}
+                  >
+                    <div className="timeline-marker">
+                      <span className="timeline-order">{String(stop.order).padStart(2, '0')}</span>
+                    </div>
+                    <div className="timeline-content">
+                      <strong className="stop-label">{stop.label}</strong>
+                      <div className="stop-time">{stop.timeHint}</div>
+                    </div>
+                  </div>
                 ))}
-              </ul>
+              </div>
             </>
           ) : (
             <div className="empty-state">
               <p>当前还没有线路规划数据。</p>
-              <p>补入路线方案后，这里会展示不同路线的节奏与停留顺序。</p>
             </div>
           )}
         </aside>
       </div>
 
-      <div className="stage-note">
-        这一区域更适合做路线比较和节奏判断，而不是逐段导航。
-      </div>
+      <div className="stage-note">以地图为视觉核心，详情区域可在移动端折叠为底部抽屉。</div>
     </section>
   )
 }
