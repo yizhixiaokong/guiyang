@@ -1,4 +1,5 @@
 import type { RoutePlan } from '../types'
+import { RouteMap } from './RouteMap'
 
 interface RoutesPanelProps {
   routePlans: RoutePlan[]
@@ -64,27 +65,16 @@ export function RoutesPanel({
       </div>
 
       <div className="routes-layout">
-        <div className="route-map-placeholder" aria-label="线路地图占位">
-          <div className="route-lines" />
-          <div className="route-nodes" aria-hidden="true">
-            <div className="route-node" style={{ left: '12%', top: '22%' }}>
-              01
+        <div className="route-map-placeholder" aria-label="线路地图">
+            <div className="route-map-board-wrapper">
+              <RouteMap stops={activeRoute?.stops ?? []} />
             </div>
-            <div className="route-node" style={{ left: '46%', top: '48%' }}>
-              02
-            </div>
-            <div className="route-node" style={{ left: '72%', top: '24%' }}>
-              03
+            <div className="route-map-caption">
+              <p className="mini-label">当日线路</p>
+              <h3>{activeRoute?.name ?? '线路详情'}</h3>
+              <p>地图仅展示当前所选日期的景点顺序与移动方向（线 + 箭头）。</p>
             </div>
           </div>
-          <div className="route-map-caption">
-            <p className="mini-label">Route Diagram Placeholder</p>
-            <h3>路线动线示意</h3>
-            <p>
-              用来查看景点串联顺序、停留节点和整体移动方向。
-            </p>
-          </div>
-        </div>
 
         <aside className="route-summary">
           <header>

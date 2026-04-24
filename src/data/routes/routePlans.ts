@@ -1,3 +1,54 @@
 import type { RoutePlan } from '../../types'
 
-export const routePlans: RoutePlan[] = []
+export const routePlans: RoutePlan[] = [
+	{
+		id: 'day-1-2026-05-02',
+		name: '第一天 — 2026-05-02',
+		summary: '固定行程：城市步行与夜游组合，适合首日熟悉城市脉络。',
+		totalDuration: '6-8 小时',
+		intensity: '中等',
+		suitableFor: '首次到访、家庭与轻徒步',
+		status: 'ready',
+		stops: [
+			{ id: 'guiyang-north-railway-station', label: '贵阳北站（酒店）', timeHint: '出发', order: 1 },
+			{ id: 'qianlingshan-park', label: '黔灵山公园', timeHint: '上午', order: 2 },
+			{ id: 'minsheng-road', label: '民生路（小吃）', timeHint: '午餐', order: 3 },
+			{ id: 'wenchang-pavilion', label: '文昌阁', timeHint: '下午', order: 4 },
+			{ id: 'shengfu-north-street', label: '省府北街', timeHint: '下午', order: 5 },
+			{ id: 'jiaxiu-tower', label: '甲秀楼', timeHint: '傍晚/夜景', order: 6 },
+			{ id: 'qingyun-market', label: '青云市集', timeHint: '夜间', order: 7 },
+			{ id: 'guiyang-north-railway-station', label: '返回贵阳北站（酒店）', timeHint: '结束', order: 8 },
+		],
+	},
+	{
+		id: 'day-2-2026-05-03',
+		name: '第二天 — 2026-05-03',
+		summary: '上午博物馆，下午青岩古镇；全天保留弹性备选景点。',
+		totalDuration: '全天（弹性）',
+		intensity: '轻松/弹性',
+		suitableFor: '文化/古镇慢游',
+		status: 'ready',
+		stops: [
+			{ id: 'guiyang-north-railway-station', label: '酒店出发（贵阳北站）', timeHint: '出发', order: 1 },
+			{ id: 'guizhou-geology-museum', label: '贵州省地质博物馆', timeHint: '上午', order: 2 },
+			{ id: 'qingyan-ancient-town', label: '青岩古镇', timeHint: '中午/下午', order: 3 },
+			// 弹性备选，可根据时间选择前置/后置/略过
+			{ id: 'guiyang-north-cathedral', label: '贵阳北天主教堂（可选）', timeHint: '可选', order: 4 },
+			{ id: 'guiyang-white-palace', label: '贵阳白宫（可选）', timeHint: '可选', order: 5 },
+		],
+	},
+	{
+		id: 'day-3-2026-05-04',
+		name: '第三天 — 2026-05-04',
+		summary: '轻松返程：博物馆半日 + 前往贵阳东站返程。',
+		totalDuration: '半天',
+		intensity: '轻松',
+		suitableFor: '返程准备、文化补充',
+		status: 'ready',
+		stops: [
+			{ id: 'guizhou-museum', label: '贵州省博物馆', timeHint: '上午', order: 1 },
+			{ id: 'guiyang-north-railway-station', label: '返回酒店并退房（贵阳北站附近）', timeHint: '午前', order: 2 },
+			{ id: 'guiyang-east-railway-station', label: '贵阳东站（出发）', timeHint: '出发', order: 3 },
+		],
+	},
+]
