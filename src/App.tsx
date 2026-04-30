@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react'
 import './App.css'
+import MobileSelector from './modules/MobileSelector'
 import { attractions } from './data/attractions/attractions'
 import { tripMeta } from './data/meta/tripMeta'
 import { routePlans } from './data/routes/routePlans'
@@ -208,7 +209,7 @@ function App() {
         </aside>
       </header>
 
-      <section className="module-switcher" aria-label="模块切换">
+      <section className="module-switcher desktop-only" aria-label="模块切换">
         {moduleOptions.map((module) => (
           <button
             key={module.key}
@@ -222,6 +223,12 @@ function App() {
           </button>
         ))}
       </section>
+
+      <MobileSelector
+        variant="auto"
+        value={activeModule}
+        onChange={(id) => setActiveModule(id as ModuleKey)}
+      />
 
       <main className="stage-panel">
         {activeModule === 'attractions' && (
