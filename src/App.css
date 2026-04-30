@@ -1706,3 +1706,35 @@
     min-width: 8rem;
   }
 }
+
+@media (max-width: 640px) {
+  .routes-toolbar {
+    /* flex-wrap: wrap; */
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .date-tabs {
+    display: flex;
+    flex: 1 1 auto;
+    min-width: 0;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .toolbar-actions {
+    flex: 0 0 auto;
+    margin-top: 0.35rem;
+  }
+  
+  .date-tab {
+    min-width: 0;
+    max-width: 11.5rem;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+}
