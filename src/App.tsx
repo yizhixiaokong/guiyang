@@ -89,6 +89,30 @@ function App() {
     window.localStorage.setItem(ACTIVE_ATTRACTION_STORAGE_KEY, activeAttractionId)
   }, [activeAttractionId])
 
+  // Responsive hero: track mobile viewport and collapsed state
+  const [isMobileView, setIsMobileView] = useState(false)
+  const [heroExpanded, setHeroExpanded] = useState(true)
+
+  useEffect(() => {
+    const mq = window.matchMedia('(max-width: 767px)')
+    const handler = (e: MediaQueryListEvent | MediaQueryList) => {
+      setIsMobileView(Boolean('matches' in e ? e.matches : (mq as any).matches))
+    }
+    handler(mq as any)
+    const anyMq = mq as any
+    if (typeof anyMq.addEventListener === 'function') anyMq.addEventListener('change', handler)
+    else if (typeof anyMq.addListener === 'function') anyMq.addListener(handler)
+    return () => {
+      if (typeof anyMq.removeEventListener === 'function') anyMq.removeEventListener('change', handler)
+      else if (typeof anyMq.removeListener === 'function') anyMq.removeListener(handler)
+    }
+  }, [])
+
+  // default: mobile -> collapsed, desktop -> expanded
+  useEffect(() => {
+    setHeroExpanded(!isMobileView)
+  }, [isMobileView])
+
   const selectedAttractionNames = attractions
     .filter((attraction) => selectedAttractionIds.includes(attraction.id))
     .map((attraction) => attraction.name)
@@ -160,7 +184,7 @@ function App() {
 
   return (
     <div className="page-shell">
-      <header className="hero-panel">
+      <header className={`hero-panel ${isMobileView && !heroExpanded ? 'collapsed' : 'expanded'}`}>
         <div className="hero-copy">
           <p className="eyebrow">{tripMeta.eyebrow}</p>
           <div className="hero-title-row">
@@ -168,6 +192,21 @@ function App() {
             <div className="title-stamp">{tripMeta.badge}</div>
           </div>
           <p className="hero-subtitle">{tripMeta.subtitle}</p>
+          <div className="hero-actions">
+            <div className="hero-compact">
+              <span className="compact-module">{moduleOptions.find(m => m.key === activeModule)?.title}</span>
+              <span className="compact-sep"> · </span>
+              <span className="compact-stats">{attractions.length} 景点 · {mustVisitCount} 必去</span>
+            </div>
+            <button
+              type="button"
+              className="hero-toggle mobile-only"
+              onClick={() => setHeroExpanded(v => !v)}
+              aria-expanded={heroExpanded}
+            >
+              {heroExpanded ? '收起速览' : '展开速览'}
+            </button>
+          </div>
           <div className="hero-meta-grid" aria-label="行程元信息">
             <div>
               <span>日期</span>
