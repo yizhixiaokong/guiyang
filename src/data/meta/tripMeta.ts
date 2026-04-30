@@ -6,11 +6,11 @@ export const tripMeta: TripMeta = {
   subtitle:
     '把城区地标、花溪山水和夜游节点放在同一张可切换地图里，快速完成五一行程取舍与路线组合。',
   badge: '051',
-  dateRange: '五一假期 / 数据待补',
+  dateRange: '五一假期',
   style: '旅行海报信息图感',
   mapStrategy: '高德真实地图 + 信息海报布局',
-  duration: '3天2夜',
-  highlights: ['甲秀楼夜景', '花溪徒步'],
+  duration: '3天3夜',
+  highlights: ['黔灵山公园', '青岩古镇', '甲秀楼夜景', '青云市集'],
   footerSummary: '当前版本已覆盖景点筛选、路线浏览与时间计划入口，适合直接用于行前决策。',
   lastUpdated: '更新于 2026.04.24',
   boundaryNotes: [

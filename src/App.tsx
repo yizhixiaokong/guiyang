@@ -200,7 +200,7 @@ function App() {
               {tripMeta.highlights && tripMeta.highlights.length > 0 && (
                 <>
                   <span className="compact-sep"> · </span>
-                  <span className="compact-highlights">{tripMeta.highlights.slice(0,2).join(' / ')}</span>
+                  <span className="compact-highlights">{tripMeta.highlights.slice(0,4).join(' / ')}</span>
                 </>
               )}
             </div>
@@ -226,7 +226,7 @@ function App() {
               <span>亮点</span>
               <strong>
                 {tripMeta.highlights && tripMeta.highlights.length > 0
-                  ? tripMeta.highlights.slice(0, 2).join('，')
+                  ? tripMeta.highlights.slice(0, 4).join('，')
                   : '—'}
               </strong>
             </div>
