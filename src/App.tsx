@@ -253,7 +253,7 @@ function App() {
               <strong>{districtCount} 区</strong>
             </article>
           </div>
-          <div className="board-ribbon">先看地图分布，再按兴趣做勾选与导出。</div>
+          <div className="board-ribbon">按兴趣探索，玩出属于你的贵阳记忆。</div>
           <p className="hero-board-note">当前包含城市地标、老城街巷、花溪山水、博物馆与交通节点图示。</p>
         </aside>
       </header>
