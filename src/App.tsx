@@ -196,7 +196,13 @@ function App() {
             <div className="hero-compact">
               <span className="compact-module">{moduleOptions.find(m => m.key === activeModule)?.title}</span>
               <span className="compact-sep"> · </span>
-              <span className="compact-stats">{attractions.length} 景点 · {mustVisitCount} 必去</span>
+              <span className="compact-date">{tripMeta.dateRange}{tripMeta.duration ? ` · ${tripMeta.duration}` : ''}</span>
+              {tripMeta.highlights && tripMeta.highlights.length > 0 && (
+                <>
+                  <span className="compact-sep"> · </span>
+                  <span className="compact-highlights">{tripMeta.highlights.slice(0,2).join(' / ')}</span>
+                </>
+              )}
             </div>
             <button
               type="button"
@@ -213,12 +219,16 @@ function App() {
               <strong>{tripMeta.dateRange}</strong>
             </div>
             <div>
-              <span>风格</span>
-              <strong>{tripMeta.style}</strong>
+              <span>时长</span>
+              <strong>{tripMeta.duration ?? '—'}</strong>
             </div>
             <div>
-              <span>地图方案</span>
-              <strong>{tripMeta.mapStrategy}</strong>
+              <span>亮点</span>
+              <strong>
+                {tripMeta.highlights && tripMeta.highlights.length > 0
+                  ? tripMeta.highlights.slice(0, 2).join('，')
+                  : '—'}
+              </strong>
             </div>
           </div>
         </div>

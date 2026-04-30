@@ -51,8 +51,12 @@ export interface TripMeta {
   subtitle: string
   badge: string
   dateRange: string
+  // 视觉/描述字段（保留但不一定显示在 Hero）
   style: string
   mapStrategy: string
+  // 新增：行程时长（例如："3天2夜"）和亮点（1-2 项短句）
+  duration?: string
+  highlights?: string[]
   footerSummary: string
   lastUpdated: string
   boundaryNotes: string[]

@@ -43,6 +43,12 @@
   color: var(--accent-deep);
 }
 
+.compact-date { color: var(--ink); font-weight: 600; }
+.compact-highlights { color: var(--highlight); font-weight: 700; }
+.compact-highlights::before { content: '✨ '; }
+
+.hero-meta-grid div strong { display: block; margin-top: 0.35rem; font-size: 1rem; }
+
 .hero-panel {
   display: grid;
   grid-template-columns: minmax(0, 1.5fr) minmax(18rem, 0.8fr);

@@ -9,6 +9,8 @@ export const tripMeta: TripMeta = {
   dateRange: '五一假期 / 数据待补',
   style: '旅行海报信息图感',
   mapStrategy: '高德真实地图 + 信息海报布局',
+  duration: '3天2夜',
+  highlights: ['甲秀楼夜景', '花溪徒步'],
   footerSummary: '当前版本已覆盖景点筛选、路线浏览与时间计划入口，适合直接用于行前决策。',
   lastUpdated: '更新于 2026.04.24',
   boundaryNotes: [
