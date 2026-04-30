@@ -1,0 +1,84 @@
+/* mobile-selector.css — re-themed to match project (cream paper, warm accents) */
+
+.mobile-selector-root {
+  position: fixed;
+  left: 0;
+  right: 0;
+  bottom: 12px;
+  display: flex;
+  justify-content: center;
+  z-index: 1200;
+  pointer-events: none;
+}
+
+.bottom-nav {
+  pointer-events: auto;
+  display: flex;
+  gap: 8px;
+  align-items: center;
+  justify-content: space-around;
+  max-width: calc(100% - 32px);
+  margin: 0 16px;
+  padding: 8px 12px;
+  border-radius: 14px;
+  background: linear-gradient(180deg, rgba(255,249,240,0.98), rgba(252,245,236,0.98));
+  border: 1px solid var(--line);
+  box-shadow: var(--paper-shadow);
+  backdrop-filter: blur(6px);
+}
+
+.bottom-item {
+  position: relative;
+  border: none;
+  background: transparent;
+  color: var(--ink-soft);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  cursor: pointer;
+  padding: 8px 10px;
+  border-radius: 10px;
+  transition: transform .18s ease, color .14s ease;
+  min-width: 64px;
+}
+
+.bottom-item .icon { width:20px; height:20px; color: currentColor; display:inline-flex; }
+.bottom-item .label { font-family: var(--sans); font-weight: 600; color: inherit; font-size: 12px; }
+
+.bottom-item:hover { transform: translateY(-2px); }
+
+.bottom-item.active {
+  color: #fff;
+  transform: translateY(-6px);
+  background: linear-gradient(90deg, var(--accent-strong), var(--highlight));
+  box-shadow: 0 10px 26px rgba(201,68,44,0.12);
+}
+
+.bottom-item.active::after {
+  content: '';
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  bottom: -10px;
+  width: 40px;
+  height: 6px;
+  border-radius: 8px;
+  background: linear-gradient(90deg, var(--accent-strong), var(--highlight));
+  box-shadow: 0 6px 16px rgba(201,68,44,0.12);
+}
+
+/* hide on desktop */
+@media (min-width: 768px) {
+  .mobile-selector-root { display: none; }
+}
+
+/* utility visibility helpers used by App.tsx */
+.desktop-only { display: flex; }
+.mobile-only { display: none; }
+
+@media (max-width: 767px) {
+  .desktop-only { display: none; }
+  .mobile-only { display: block; }
+}
