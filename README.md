@@ -1,41 +1,54 @@
 # 贵阳五一旅行攻略
 
-这是一个完全定制化的单页视觉展示项目，用来承载贵阳五一旅行攻略。当前阶段已经搭好 Vite + React + TypeScript 基础工程，并把页面主结构拆成三个模块：景点清单、线路规划、详细时间计划表。
+一个为贵阳五一旅行定制的单页互动攻略应用，提供景点浏览、线路规划和行程清单三大功能模块。
 
-## 当前实现范围
+## 功能概览
 
-- 顶部海报式首屏和三模块切换骨架
-- 景点清单模块的真实高德地图、勾选清单和复制地点名称按钮
-- 线路规划模块的多候选线路切换承载位和路线可视化占位
-- 详细时间计划表模块的空白承载位
-- 材料目录和结构化数据目录
-- `.github/skills/` 已加入 `.gitignore`
+### 模块 01 · 景点清单
+- 真实高德地图（WebGL 2.0）展示景点点位，支持点击聚焦
+- 景点卡片轮播，含图片画廊、门票、开放时间、游玩重点等详细信息
+- 勾选景点加入"导出清单"，一键复制全部已选景点名称
+- 景点详情支持**查看地点**（高德地图定位）和**导航**（高德地图导航）两个快捷入口，Android / iOS 双端兼容，未安装时自动降级到网页版
 
-当前不包含真实线路数据、路径规划服务接入和最终视觉定稿。
+### 模块 02 · 线路规划
+- 多条候选线路切换，含线路摘要、时长、强度和适合人群信息
+- 路线站点可视化（顺序展示）
+
+### 模块 03 · 行程清单
+- 自由增删 Todo 任务，支持设置日期和时间
+- 基于 `@dnd-kit` 的拖拽排序，移动端长按触发
+- 任务状态和列表自动持久化到 `localStorage`（key: `guiyang.schedule.todo.tasks.v1`）
+- 日期时间选择器使用 `react-datepicker`，手机端以底部抽屉形式弹出
 
 ## 技术栈
 
-- Vite
-- React 19
-- TypeScript
+| 层级 | 依赖 |
+|------|------|
+| 框架 | Vite · React 19 · TypeScript |
+| 地图 | 高德地图 JSAPI v2.0（WebGL） |
+| 拖拽 | @dnd-kit/core · @dnd-kit/sortable · @dnd-kit/utilities |
+| 日期选择 | react-datepicker |
+| 样式 | CSS Custom Properties，无 UI 框架 |
 
-## 启动方式
+## 快速开始
 
 ```bash
 npm install
 npm run dev
 ```
 
-如果要启用真实高德地图，还需要在项目根目录提供环境变量：
+### 环境变量
+
+在项目根目录创建 `.env.local`：
 
 ```bash
 VITE_AMAP_KEY=你的高德 Web Key
 VITE_AMAP_SECURITY_JS_CODE=你的安全密钥
-# 生产环境建议改为代理方式
+# 生产环境建议改为代理方式（可替代上面的安全密钥）
 # VITE_AMAP_SERVICE_HOST=https://your-domain/_AMapService
 ```
 
-构建生产版本：
+### 构建
 
 ```bash
 npm run build
@@ -43,72 +56,90 @@ npm run build
 
 ## GitHub Pages 部署
 
-仓库已经补好 GitHub Pages Actions workflow。默认行为：推送到 `main` 后自动构建并发布到 Pages。
+推送到 `main` 后自动触发 Actions 构建并发布。首次使用需要：
 
-发布前需要先在仓库里配置：
-
-1. 打开 GitHub 仓库的 Settings -> Pages，把 Source 切到 GitHub Actions。
-2. 打开 Settings -> Secrets and variables -> Actions，按需添加这些 Secrets：
+1. 仓库 **Settings → Pages** 将 Source 设为 **GitHub Actions**
+2. 仓库 **Settings → Secrets and variables → Actions** 添加以下 Secret：
 
 ```text
 VITE_AMAP_KEY
 VITE_AMAP_SECURITY_JS_CODE
-VITE_AMAP_SERVICE_HOST
+# 或 VITE_AMAP_SERVICE_HOST（代理模式）
 ```
 
-说明：
-
-- 如果 GitHub Pages 直接走前端鉴权，只需要前两个 Secret。
-- 如果地图改为你自己的代理服务，就改填 `VITE_AMAP_SERVICE_HOST`，同时可以不再提供 `VITE_AMAP_SECURITY_JS_CODE`。
-- Vite 会在 GitHub Actions 构建时自动把资源路径切到仓库子路径，例如 `/guiyang/`，本地开发仍然保持根路径 `/`。
-
-首次发布后，页面地址通常是：
+发布后访问地址：
 
 ```text
 https://<你的 GitHub 用户名>.github.io/guiyang/
 ```
 
-## 目录说明
+> 本地开发保持根路径 `/`，Vite 在 CI 构建时自动切到仓库子路径。
+
+## 目录结构
 
 ```text
 .
-├─ materials/
-│  ├─ images/         # 你后续投放图片素材
-│  ├─ maps/           # 静态示意地图、截图、底图参考
-│  └─ references/     # 参考资料、AI 输出原文、笔记
-├─ src/
-│  ├─ data/
-│  │  ├─ meta/        # 页面全局元信息
-│  │  ├─ attractions/ # 景点结构化数据
-│  │  └─ routes/      # 路线结构化数据
-│  ├─ modules/        # 三个页面模块组件
-│  ├─ App.tsx         # 页面壳子与模块切换
-│  ├─ App.css         # 模块级样式
-│  └─ index.css       # 全局视觉样式
-└─ README.md
+├── materials/
+│   ├── images/           # 图片素材
+│   ├── maps/             # 地图截图、底图参考
+│   └── references/       # 参考资料、景点清单、线路规划文字稿
+├── src/
+│   ├── data/
+│   │   ├── meta/         # 页面全局元信息（tripMeta.ts）
+│   │   ├── attractions/  # 景点结构化数据（attractions.ts）
+│   │   └── routes/       # 线路结构化数据（routePlans.ts）
+│   ├── modules/
+│   │   ├── AttractionsPanel.tsx   # 景点清单模块
+│   │   ├── AttractionsAmap.tsx    # 高德地图组件
+│   │   ├── AttractionGallery.tsx  # 图片画廊组件
+│   │   ├── RouteMap.tsx           # 线路地图组件
+│   │   ├── RoutesPanel.tsx        # 线路规划模块
+│   │   ├── SchedulePanel.tsx      # 行程清单模块
+│   │   ├── MobileSelector.tsx     # 移动端模块选择器
+│   │   └── mapUtils.ts            # 高德地图工具函数
+│   ├── types.ts          # 全局类型定义
+│   ├── App.tsx           # 页面壳与模块切换
+│   ├── App.css           # 模块级样式
+│   └── index.css         # 全局视觉样式（CSS 变量）
+└── README.md
 ```
 
-## 数据接入约定
+## 数据维护
 
-### 景点清单
+### 景点数据（`src/data/attractions/attractions.ts`）
 
-后续可把景点信息填入 `src/data/attractions/attractions.ts`，字段已经预留为景点名称、区域、经纬度、推荐理由、标签等。页面会自动支持勾选、复制地点名称和地图点位展示。
+每个景点包含以下字段：
 
-### 线路规划
+| 字段 | 类型 | 说明 |
+|------|------|------|
+| `id` | `string` | 唯一标识 |
+| `name` | `string` | 景点名称 |
+| `district` | `string` | 所在区 |
+| `category` | `string` | 分类（自然/历史/文化…） |
+| `coordinates` | `[number, number]` | GCJ-02 经纬度 `[lng, lat]` |
+| `priority` | `'必去' \| '推荐'` | 优先级标签 |
+| `ticket` | `string` | 门票信息 |
+| `openingHours` | `string` | 开放时间 |
+| `recommendedDuration` | `string` | 建议游玩时长 |
+| `highlights` | `string[]` | 游玩亮点 |
+| `images` | `AttractionImage[]` | 图片列表（`src / alt / caption`） |
 
-后续可把外部 AI 给出的候选线路填入 `src/data/routes/routePlans.ts`。当前结构已经支持多条候选线路切换，后续可以继续强化路线摘要、箭头、时间提示和序号标注。
+### 线路数据（`src/data/routes/routePlans.ts`）
 
-### 详细时间计划表
+每条路线包含 `name / summary / totalDuration / intensity / suitableFor` 和有序的 `stops` 数组。
 
-这个模块当前故意不做结构化约束。等你把其他 AI 生成的时间计划表内容给我后，我会按那份数据的具体形式做定制展示。
+### 全局元信息（`src/data/meta/tripMeta.ts`）
 
-## 地图策略
+页面标题、副标题、日期区间、页脚摘要等配置项。
 
-景点模块已经接入高德 JSAPI v2.0，当前只用了真实底图、点标记和信息窗体。
+## localStorage 说明
 
-- 开发环境可直接使用 `VITE_AMAP_KEY` + `VITE_AMAP_SECURITY_JS_CODE`
-- 生产环境建议改为 `VITE_AMAP_SERVICE_HOST` 代理，不要把安全密钥暴露到前端
-- 组件卸载时已调用 `map.destroy()`，避免 WebGL 上下文泄漏
+| Key | 内容 |
+|-----|------|
+| `guiyang.schedule.todo.tasks.v1` | 行程清单任务列表（JSON） |
+| `guiyang:selected-attraction-ids` | 已选景点 ID 列表 |
+| `guiyang:active-attraction-id` | 当前聚焦景点 ID |
+
 
 ## 下一阶段建议
 
