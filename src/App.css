@@ -656,6 +656,20 @@
   align-items: start;
 }
 
+.attraction-detail-actions {
+  display: flex;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+  align-items: center;
+  flex: 0 0 auto;
+}
+
+.attraction-nav-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.38rem;
+}
+
 .attraction-map-toolbar h3,
 .selector-header h3,
 .attraction-detail-header h3 {

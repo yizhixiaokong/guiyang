@@ -2,6 +2,32 @@ import type { Attraction } from '../types'
 import { AttractionsAmap } from './AttractionsAmap'
 import { AttractionGallery } from './AttractionGallery'
 
+function NavIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="1.05rem" height="1.05rem" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <polygon points="3 11 22 2 13 21 11 13 3 11" />
+    </svg>
+  )
+}
+
+function openAmapNavi(name: string, coordinates: [number, number]) {
+  const [lng, lat] = coordinates
+  const ua = navigator.userAgent.toLowerCase()
+  const isIOS = /iphone|ipad|ipod/.test(ua)
+  const fallback = encodeURIComponent('https://mobile.amap.com')
+  const poiname = encodeURIComponent(name)
+
+  if (isIOS) {
+    location.href = `iosamap://navi?sourceApplication=guiyang-guide&poiname=${poiname}&lat=${lat}&lon=${lng}&dev=0&style=2`
+    setTimeout(() => { location.href = 'https://mobile.amap.com' }, 2000)
+  } else {
+    // Android Intent URL：未安装时自动降级到高德网页版
+    location.href =
+      `intent://navi?sourceApplication=guiyang-guide&poiname=${poiname}&lat=${lat}&lon=${lng}&dev=0&style=2` +
+      `#Intent;scheme=androidamap;package=com.autonavi.minimap;S.browser_fallback_url=${fallback};end`
+  }
+}
+
 interface AttractionsPanelProps {
   attractions: Attraction[]
   selectedAttractionIds: string[]
@@ -181,13 +207,24 @@ export function AttractionsPanel({
           </div>
 
           {detailAttraction && (
-            <button
-              type="button"
-              className={isDetailSelected ? 'ghost-button' : 'action-button'}
-              onClick={() => onToggleAttraction(detailAttraction.id)}
-            >
-              {isDetailSelected ? '移出导出清单' : '加入导出清单'}
-            </button>
+            <div className="attraction-detail-actions">
+              <button
+                type="button"
+                className="action-button attraction-nav-btn"
+                onClick={() => openAmapNavi(detailAttraction.name, detailAttraction.coordinates)}
+                aria-label={`在高德地图中导航到${detailAttraction.name}`}
+              >
+                <NavIcon />
+                导航
+              </button>
+              <button
+                type="button"
+                className={isDetailSelected ? 'ghost-button' : 'action-button'}
+                onClick={() => onToggleAttraction(detailAttraction.id)}
+              >
+                {isDetailSelected ? '移出导出清单' : '加入导出清单'}
+              </button>
+            </div>
           )}
         </header>
 
