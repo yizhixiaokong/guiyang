@@ -2196,6 +2196,10 @@
 }
 
 @media (max-width: 640px) {
+  .footer-summary {
+    display: none;
+  }
+
   .page-shell,
   .stage-panel,
   .hero-panel {

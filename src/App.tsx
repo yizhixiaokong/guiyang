@@ -304,7 +304,7 @@ function App() {
       </main>
 
       <footer className="page-footer">
-        <p>{tripMeta.footerSummary}</p>
+        <p className="footer-summary">{tripMeta.footerSummary}</p>
         <p>{tripMeta.lastUpdated}</p>
       </footer>
     </div>

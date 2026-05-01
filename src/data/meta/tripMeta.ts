@@ -12,7 +12,7 @@ export const tripMeta: TripMeta = {
   duration: '3天3夜',
   highlights: ['黔灵山公园', '青岩古镇', '甲秀楼夜景', '青云市集'],
   footerSummary: '当前版本已覆盖景点筛选、路线浏览与时间计划入口，适合直接用于行前决策。',
-  lastUpdated: '更新于 2026.04.24',
+  lastUpdated: '更新于 2026.05.01',
   boundaryNotes: [
     '城市地标、历史街巷与自然景区可在同一视图快速对比。',
     '先从地图分布筛点，再进入路线与时间安排会更高效。',
