@@ -18,7 +18,9 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useEffect, useMemo, useRef, useState } from 'react'
+import DatePicker from 'react-datepicker'
+import { useEffect, useMemo, useState } from 'react'
+import 'react-datepicker/dist/react-datepicker.css'
 import type { TodoTask, TodoTaskDraft } from '../types'
 
 function EditIcon() {
@@ -227,18 +229,33 @@ function formatTaskDateTime(rawValue?: string) {
   return DATE_TIME_DISPLAY_FORMATTER.format(parsedDate)
 }
 
-function openDateTimePicker(inputElement: HTMLInputElement | null) {
-  if (!inputElement) {
-    return
+function toDateTimeObject(rawValue?: string) {
+  const normalized = toDateTimeInputValue(rawValue)
+
+  if (!normalized) {
+    return null
   }
 
-  if ('showPicker' in inputElement && typeof inputElement.showPicker === 'function') {
-    inputElement.showPicker()
-    return
+  const parsedDate = new Date(normalized)
+
+  if (Number.isNaN(parsedDate.getTime())) {
+    return null
   }
 
-  inputElement.focus()
-  inputElement.click()
+  return parsedDate
+}
+
+function toDateTimeStorageValue(date: Date | null) {
+  if (!date) {
+    return ''
+  }
+
+  const year = date.getFullYear()
+  const month = String(date.getMonth() + 1).padStart(2, '0')
+  const day = String(date.getDate()).padStart(2, '0')
+  const hours = String(date.getHours()).padStart(2, '0')
+  const minutes = String(date.getMinutes()).padStart(2, '0')
+  return `${year}-${month}-${day}T${hours}:${minutes}`
 }
 
 function createTodoId() {
@@ -252,6 +269,7 @@ function createTodoId() {
 interface SortableTodoItemProps {
   task: TodoTask
   isEditing: boolean
+  isMobileViewport: boolean
   draft: TodoTaskDraft
   onToggleCompleted: (id: string) => void
   onStartEdit: (task: TodoTask) => void
@@ -264,6 +282,7 @@ interface SortableTodoItemProps {
 function SortableTodoItem({
   task,
   isEditing,
+  isMobileViewport,
   draft,
   onToggleCompleted,
   onStartEdit,
@@ -337,11 +356,21 @@ function SortableTodoItem({
                 }
               }}
             />
-            <input
-              type="datetime-local"
-              value={draft.time}
-              onChange={(event) => onDraftChange('time', event.target.value)}
+            <DatePicker
+              selected={toDateTimeObject(draft.time)}
+              onChange={(date: Date | null) => onDraftChange('time', toDateTimeStorageValue(date))}
+              showTimeSelect
+              timeIntervals={10}
+              dateFormat="yyyy-MM-dd HH:mm"
+              timeFormat="HH:mm"
               className="todo-edit-time"
+              wrapperClassName="todo-edit-time-wrapper"
+              popperClassName="todo-datepicker-popper"
+              calendarClassName="todo-datepicker"
+              popperPlacement="top-start"
+              withPortal={isMobileViewport}
+              placeholderText="选择日期和时间"
+              isClearable
               onKeyDown={(event) => {
                 if (event.key === 'Enter' && !saveDisabled) {
                   onSaveEdit()
@@ -419,6 +448,7 @@ function SortableTodoItem({
 interface TodoComposerProps {
   titleValue: string
   timeValue: string
+  isMobileViewport: boolean
   onTitleChange: (value: string) => void
   onTimeChange: (value: string) => void
   onSubmit: () => void
@@ -427,12 +457,11 @@ interface TodoComposerProps {
 function TodoComposer({
   titleValue,
   timeValue,
+  isMobileViewport,
   onTitleChange,
   onTimeChange,
   onSubmit,
 }: TodoComposerProps) {
-  const dateInputRef = useRef<HTMLInputElement | null>(null)
-
   return (
     <div className="schedule-composer">
       <button
@@ -458,29 +487,30 @@ function TodoComposer({
         }}
       />
 
-      <button
-        type="button"
-        className="composer-time icon-only"
-        aria-label="选择任务日期和时间"
-        title={timeValue ? `已选择 ${formatTaskDateTime(timeValue)}` : '选择日期和时间'}
-        onClick={() => openDateTimePicker(dateInputRef.current)}
-      >
-        <span className="icon-box" aria-hidden="true">
-          <CalendarIcon />
-        </span>
-      </button>
-      {/* 隐藏输入固定在屏幕底部，确保移动端选择器从底部弹出 */}
-      <input
-        ref={dateInputRef}
-        type="datetime-local"
-        value={timeValue}
-        className="composer-time-input"
-        onChange={(event) => onTimeChange(event.target.value)}
-        onKeyDown={(event) => {
-          if (event.key === 'Enter') {
-            onSubmit()
-          }
-        }}
+      <DatePicker
+        selected={toDateTimeObject(timeValue)}
+        onChange={(date: Date | null) => onTimeChange(toDateTimeStorageValue(date))}
+        showTimeSelect
+        timeIntervals={10}
+        dateFormat="yyyy-MM-dd HH:mm"
+        timeFormat="HH:mm"
+        placeholderText="选择日期和时间"
+        withPortal={isMobileViewport}
+        popperClassName="todo-datepicker-popper"
+        calendarClassName="todo-datepicker"
+        popperPlacement="top-start"
+        customInput={
+          <button
+            type="button"
+            className="composer-time icon-only"
+            aria-label="选择任务日期和时间"
+            title={timeValue ? `已选择 ${formatTaskDateTime(timeValue)}` : '选择日期和时间'}
+          >
+            <span className="icon-box" aria-hidden="true">
+              <CalendarIcon />
+            </span>
+          </button>
+        }
       />
     </div>
   )
@@ -513,6 +543,24 @@ export function SchedulePanel() {
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState<TodoTaskDraft>({ title: '', time: '' })
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
+  const [isMobileViewport, setIsMobileViewport] = useState(false)
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 640px)')
+    const update = (event: MediaQueryList | MediaQueryListEvent) => {
+      setIsMobileViewport(event.matches)
+    }
+
+    update(mediaQuery)
+
+    if (typeof mediaQuery.addEventListener === 'function') {
+      mediaQuery.addEventListener('change', update)
+      return () => mediaQuery.removeEventListener('change', update)
+    }
+
+    mediaQuery.addListener(update)
+    return () => mediaQuery.removeListener(update)
+  }, [])
 
   useEffect(() => {
     try {
@@ -691,6 +739,7 @@ export function SchedulePanel() {
                     key={task.id}
                     task={task}
                     isEditing={editingId === task.id}
+                    isMobileViewport={isMobileViewport}
                     draft={draft}
                     onToggleCompleted={handleToggleCompleted}
                     onStartEdit={handleStartEdit}
@@ -714,6 +763,7 @@ export function SchedulePanel() {
         <TodoComposer
           titleValue={newTaskTitle}
           timeValue={newTaskTime}
+          isMobileViewport={isMobileViewport}
           onTitleChange={setNewTaskTitle}
           onTimeChange={setNewTaskTime}
           onSubmit={handleAddTask}
