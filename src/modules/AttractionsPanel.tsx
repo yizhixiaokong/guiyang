@@ -10,6 +10,15 @@ function NavIcon() {
   )
 }
 
+function MapPinIcon() {
+  return (
+    <svg viewBox="0 0 24 24" width="1.05rem" height="1.05rem" aria-hidden="true" focusable="false" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">
+      <path d="M21 10c0 6-9 13-9 13S3 16 3 10a9 9 0 0 1 18 0z" />
+      <circle cx="12" cy="10" r="3" />
+    </svg>
+  )
+}
+
 function openAmapNavi(name: string, coordinates: [number, number]) {
   const [lng, lat] = coordinates
   const ua = navigator.userAgent.toLowerCase()
@@ -24,6 +33,23 @@ function openAmapNavi(name: string, coordinates: [number, number]) {
     // Android Intent URL：未安装时自动降级到高德网页版
     location.href =
       `intent://navi?sourceApplication=guiyang-guide&poiname=${poiname}&lat=${lat}&lon=${lng}&dev=0&style=2` +
+      `#Intent;scheme=androidamap;package=com.autonavi.minimap;S.browser_fallback_url=${fallback};end`
+  }
+}
+
+function openAmapView(name: string, coordinates: [number, number]) {
+  const [lng, lat] = coordinates
+  const ua = navigator.userAgent.toLowerCase()
+  const isIOS = /iphone|ipad|ipod/.test(ua)
+  const fallback = encodeURIComponent(`https://mobile.amap.com/poi/coordinate/${lng},${lat}`)
+  const poiname = encodeURIComponent(name)
+
+  if (isIOS) {
+    location.href = `iosamap://viewMap?sourceApplication=guiyang-guide&poiname=${poiname}&lat=${lat}&lon=${lng}&dev=0`
+    setTimeout(() => { location.href = `https://mobile.amap.com/poi/coordinate/${lng},${lat}` }, 2000)
+  } else {
+    location.href =
+      `intent://viewMap?sourceApplication=guiyang-guide&poiname=${poiname}&lat=${lat}&lon=${lng}&dev=0` +
       `#Intent;scheme=androidamap;package=com.autonavi.minimap;S.browser_fallback_url=${fallback};end`
   }
 }
@@ -208,6 +234,15 @@ export function AttractionsPanel({
 
           {detailAttraction && (
             <div className="attraction-detail-actions">
+              <button
+                type="button"
+                className="action-button attraction-nav-btn"
+                onClick={() => openAmapView(detailAttraction.name, detailAttraction.coordinates)}
+                aria-label={`在高德地图中查看${detailAttraction.name}位置`}
+              >
+                <MapPinIcon />
+                查看地点
+              </button>
               <button
                 type="button"
                 className="action-button attraction-nav-btn"
