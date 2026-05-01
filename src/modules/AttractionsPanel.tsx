@@ -257,7 +257,7 @@ export function AttractionsPanel({
                 className={isDetailSelected ? 'ghost-button' : 'action-button'}
                 onClick={() => onToggleAttraction(detailAttraction.id)}
               >
-                {isDetailSelected ? '移出导出清单' : '加入导出清单'}
+                {isDetailSelected ? '移出清单' : '加入清单'}
               </button>
             </div>
           )}

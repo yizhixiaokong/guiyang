@@ -651,17 +651,26 @@
 .selector-header,
 .attraction-detail-header {
   display: flex;
-  justify-content: space-between;
-  gap: 1rem;
-  align-items: start;
+  flex-direction: column;
+  gap: 0.75rem;
 }
 
 .attraction-detail-actions {
   display: flex;
   gap: 0.5rem;
-  flex-wrap: wrap;
   align-items: center;
-  flex: 0 0 auto;
+}
+
+@media (min-width: 641px) {
+  .attraction-detail-header {
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: flex-start;
+  }
+
+  .attraction-detail-actions {
+    flex: 0 0 auto;
+  }
 }
 
 .attraction-nav-btn {
