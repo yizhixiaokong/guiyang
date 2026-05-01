@@ -45,6 +45,18 @@ export interface RoutePlan {
   stops: RouteStop[]
 }
 
+export interface TodoTask {
+  id: string
+  title: string
+  completed: boolean
+  time?: string
+}
+
+export interface TodoTaskDraft {
+  title: string
+  time: string
+}
+
 export interface TripMeta {
   eyebrow: string
   title: string

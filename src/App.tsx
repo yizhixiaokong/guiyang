@@ -177,8 +177,8 @@ function App() {
     {
       key: 'schedule' as const,
       kicker: 'Module 03',
-      title: '详细时间计划表',
-      description: '按天拆解早中晚节奏，补齐后可直接转成可执行行程。',
+      title: '行程清单',
+      description: '像 Todo 一样维护当天任务，拖拽重排后直接执行。',
     },
   ]
 
