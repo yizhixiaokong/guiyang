@@ -18,7 +18,7 @@ import {
   verticalListSortingStrategy,
 } from '@dnd-kit/sortable'
 import { CSS } from '@dnd-kit/utilities'
-import { useMemo, useRef, useState } from 'react'
+import { useEffect, useMemo, useRef, useState } from 'react'
 import type { TodoTask, TodoTaskDraft } from '../types'
 
 function EditIcon() {
@@ -123,6 +123,61 @@ const INITIAL_TASKS: TodoTask[] = [
   { id: 'todo-2', title: '花果园附近午餐', completed: false, time: '2026-05-01T12:10' },
   { id: 'todo-3', title: '青云市集夜游', completed: false, time: '2026-05-01T19:00' },
 ]
+
+const TODO_STORAGE_KEY = 'guiyang.schedule.todo.tasks.v1'
+
+function normalizeStoredTask(value: unknown): TodoTask | null {
+  if (!value || typeof value !== 'object') {
+    return null
+  }
+
+  const candidate = value as Partial<TodoTask>
+
+  if (typeof candidate.id !== 'string' || candidate.id.trim().length === 0) {
+    return null
+  }
+
+  if (typeof candidate.title !== 'string' || candidate.title.trim().length === 0) {
+    return null
+  }
+
+  if (typeof candidate.completed !== 'boolean') {
+    return null
+  }
+
+  return {
+    id: candidate.id,
+    title: candidate.title,
+    completed: candidate.completed,
+    time: typeof candidate.time === 'string' && candidate.time.trim().length > 0 ? candidate.time : undefined,
+  }
+}
+
+function loadStoredTasks() {
+  if (typeof window === 'undefined') {
+    return INITIAL_TASKS
+  }
+
+  try {
+    const raw = window.localStorage.getItem(TODO_STORAGE_KEY)
+
+    if (!raw) {
+      return INITIAL_TASKS
+    }
+
+    const parsed = JSON.parse(raw)
+
+    if (!Array.isArray(parsed)) {
+      return INITIAL_TASKS
+    }
+
+    return parsed
+      .map((task) => normalizeStoredTask(task))
+      .filter((task): task is TodoTask => task !== null)
+  } catch {
+    return INITIAL_TASKS
+  }
+}
 
 const DATE_TIME_DISPLAY_FORMATTER = new Intl.DateTimeFormat('zh-CN', {
   month: '2-digit',
@@ -452,12 +507,20 @@ function TodoOverlayItem({ task }: { task: TodoTask }) {
 }
 
 export function SchedulePanel() {
-  const [tasks, setTasks] = useState<TodoTask[]>(INITIAL_TASKS)
+  const [tasks, setTasks] = useState<TodoTask[]>(() => loadStoredTasks())
   const [newTaskTitle, setNewTaskTitle] = useState('')
   const [newTaskTime, setNewTaskTime] = useState('')
   const [editingId, setEditingId] = useState<string | null>(null)
   const [draft, setDraft] = useState<TodoTaskDraft>({ title: '', time: '' })
   const [activeDragId, setActiveDragId] = useState<string | null>(null)
+
+  useEffect(() => {
+    try {
+      window.localStorage.setItem(TODO_STORAGE_KEY, JSON.stringify(tasks))
+    } catch {
+      // 忽略隐私模式或存储不可用导致的写入异常
+    }
+  }, [tasks])
 
   const sensors = useSensors(
     // 鼠标：移动 8px 后激活，不影响点击
